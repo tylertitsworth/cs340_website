@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <!--Introducing Conditionals-->>
+        {% if title %}
+        <title>{{ title }}</title>
+        {% else %}
+        <title>Welcome!</title>
+        {% endif %}
+    </head>
+    <body>
+        <div>cs340: <a href="/index">Home</a></div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>

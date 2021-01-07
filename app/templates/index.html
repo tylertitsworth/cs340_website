@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+
+<!--This is a basic statement with pythonvariable passthrough-->>
+{% block content %}
+<h1>Hello, {{ variable.pointer }}!</h1> 
+{% for var_store in var_stores %}
+    <div><p>{{ var_store.parameter1.pointer }} says: <b>{{ var_store.parameter2 }}</b></p></div>
+    {% endfor %}
+{% endblock %}
