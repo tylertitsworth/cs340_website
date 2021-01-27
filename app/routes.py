@@ -69,3 +69,10 @@ def register():
 @login_required
 def edit_profile():
     form = EditProfileForm(current_user.username)
+
+# @app.route('/mutualFunds')
+# def view_funds():
+    
+
+# @app.route('/stocks')
+# def view_stocks()

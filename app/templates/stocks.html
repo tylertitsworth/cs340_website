@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>ticker_symbol</th>
+            <th>legal_name</th>
+            <th>total_shares</th>
+            <th>current_price</th>
+        </tr>
+    </thead>
+    <tbody> 
+        {% for row in data %}
+            <tr>
+                <td>{{row[0]}}</td>
+                <td>{{row[1]}}</td>
+                <td>{{row[2]}}</td>
+                <td>{{row[3]}}</td>
+                <td>{{row[4]}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
