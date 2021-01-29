@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from flask_login import login_required, current_user, login_user, logout_user
-from app.models import User
+from app.models import User, Mutual_Funds
 from werkzeug.urls import url_parse
 from datetime import datetime
 
@@ -70,9 +70,17 @@ def register():
 def edit_profile():
     form = EditProfileForm(current_user.username)
 
+
+@app.route('/test', methods=['GET'])
+def test():
+  results = Mutual_Funds.query.all()
+  print(results)
+  return results
+#   return render_template('test.html',title = 'TEST',results = results)
+
 # @app.route('/mutualFunds')
 # def view_funds():
-    
-
+#     data = Mutual_Funds.query.all()
+#     return render_template('mutualFunds.html',title = 'Mutual')
 # @app.route('/stocks')
 # def view_stocks()
