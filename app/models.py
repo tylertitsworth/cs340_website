@@ -28,6 +28,26 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
+class Mutual_Funds(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), index=True, unique=True)
+    dollars = db.Column(db.Float)
+    total_mf_sector = db.Column(db.Float)
+
+    def __repr__(self):
+        return '<Mutual_Funds {}>'.format(self.id)
+
+class Stocks(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ticker_symbol = db.Column(db.String(32), index=True, unique=True)
+    legal_name = db.Column(db.String(128), index=True, unique=True)
+    total_shares = db.Column(db.Float)
+    current_price = db.Column(db.Float)
+    
+    def __repr__(self):
+        return '<Stocks {}>'.format(self.body)
+    
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
