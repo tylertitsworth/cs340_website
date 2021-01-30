@@ -1,8 +1,10 @@
+import re
 from flask import render_template, flash, redirect, url_for, request
+from sqlalchemy.orm import query
 from app import app, db
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm , AddMutualFundsForm, AddStocksForm
 from flask_login import login_required, current_user, login_user, logout_user
-from app.models import User, Mutual_Funds
+from app.models import  User, Mutual_Funds, Stocks
 from werkzeug.urls import url_parse
 from datetime import datetime
 
@@ -71,16 +73,35 @@ def edit_profile():
     form = EditProfileForm(current_user.username)
 
 
-@app.route('/test', methods=['GET'])
-def test():
-  results = Mutual_Funds.query.all()
-  print(results)
-  return results
-#   return render_template('test.html',title = 'TEST',results = results)
 
-# @app.route('/mutualFunds')
-# def view_funds():
-#     data = Mutual_Funds.query.all()
-#     return render_template('mutualFunds.html',title = 'Mutual')
-# @app.route('/stocks')
-# def view_stocks()
+
+@app.route('/mutualFunds',methods=['GET', 'POST'])
+def view_funds():
+    results = Mutual_Funds.query.all()
+    form = AddMutualFundsForm()
+    if form.validate_on_submit():
+        mutual_fund = Mutual_Funds(name=form.name.data, dollars=form.dollars.data, total_mf_sector=form.total_mf_sector.data)
+        db.session.add(mutual_fund)
+        db.session.commit()
+        flash("Congratulations, you added a Mutual Fund")
+        return redirect(url_for('view_funds'))
+    return render_template('mutualFunds.html',title='Mutual Funds', results=results, form=form, data = True)
+
+
+@app.route('/stocks',methods=['GET', 'POST'])
+def view_stocks():
+    results = Stocks.query.all()
+    form = AddStocksForm()
+    if form.validate_on_submit():
+        stock = Stocks(ticker_symbol=form.ticker_symbol.data, legal_name=form.legal_name.data, total_shares=form.total_shares.data, current_price=form.current_price.data)
+        db.session.add(stock)
+        db.session.commit()
+        flash("Congratulations, you added a Stock!")
+        return redirect(url_for('view_stocks'))
+    return render_template('stocks.html', title='Stocks', results=results, form=form, data = True)
+    
+# @app.route('/test', methods=['GET'])
+# def test():
+#   results = Mutual_Funds.query.all()
+#   print(results)
+#   return render_template('test.html',title = 'TEST',results = results)

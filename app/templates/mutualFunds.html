@@ -1,24 +1,34 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
 <table>
     <thead>
         <tr>
-            <th>ID</th>
-            <th>name</th>
-            <th>dollars</th>
-            <th>total_mf_sector</th>
+            <th>  ID  </th>
+            <th>  name  </th>
+            <th>  dollars  </th>
+            <th>  total_mf_sector  </th>
         </tr>
     </thead>
-    <tbody> 
-        {% for row in data %}
+    <tbody>
+        {% if data%} 
+        {% for row in results %}
             <tr>
-                <td>{{row[0]}}</td>
-                <td>{{row[1]}}</td>
-                <td>{{row[2]}}</td>
-                <td>{{row[3]}}</td>
+                <td>{{  row.id  }}</td>
+                <td>{{  row.name  }}</td>
+                <td>{{  row.dollars  }}</td>
+                <td>{{  row.total_mf_sector  }}</td>
             </tr>
         {% endfor %}
+        {% endif %}
     </tbody>
 </table>
+
+<h2>Add Mutual Funds</h2>
+<div class="row">
+    <div class="col-md-4">
+        {{ wtf.quick_form(form) }}
+    </div>
+</div>
 {% endblock %}

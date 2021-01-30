@@ -1,26 +1,36 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
 <table>
     <thead>
         <tr>
-            <th>id</th>
-            <th>ticker_symbol</th>
-            <th>legal_name</th>
-            <th>total_shares</th>
-            <th>current_price</th>
+            <th>  id  </th>
+            <th>  ticker_symbol  </th>
+            <th>  legal_name  </th>
+            <th>  total_shares  </th>
+            <th>  current_price  </th>
         </tr>
     </thead>
     <tbody> 
-        {% for row in data %}
+        {% if data%}
+        {% for row in results %}
             <tr>
-                <td>{{row[0]}}</td>
-                <td>{{row[1]}}</td>
-                <td>{{row[2]}}</td>
-                <td>{{row[3]}}</td>
-                <td>{{row[4]}}</td>
+                <td>{{  row.id  }}</td>
+                <td>{{  row.ticker_symbol  }}</td>
+                <td>{{  row.legal_name  }}</td>
+                <td>{{  row.total_shares  }}</td>
+                <td>{{  row.current_price  }}</td>
             </tr>
         {% endfor %}
+        {% endif %}
     </tbody>
 </table>
+
+<h2>Add Stock</h2>
+<div class="row">
+    <div class="col-md-4">
+        {{ wtf.quick_form(form) }}
+    </div>
+</div>
 {% endblock %}
