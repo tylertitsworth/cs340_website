@@ -76,7 +76,7 @@ def edit_profile():
 
 
 @app.route('/mutualFunds',methods=['GET', 'POST'])
-def view_funds():
+def mutualFunds():
     results = Mutual_Funds.query.all()
     form = AddMutualFundsForm()
     if form.validate_on_submit():
@@ -84,7 +84,7 @@ def view_funds():
         db.session.add(mutual_fund)
         db.session.commit()
         flash("Congratulations, you added a Mutual Fund")
-        return redirect(url_for('view_funds'))
+        return redirect(url_for('mutualFunds'))
     return render_template('mutualFunds.html',title='Mutual Funds', results=results, form=form, grow=True, data=True)
 
 
