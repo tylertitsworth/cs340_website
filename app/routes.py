@@ -2,7 +2,7 @@ import re
 from flask import render_template, flash, redirect, url_for, request
 from sqlalchemy.orm import query
 from app import app, db
-from app.forms import LoginForm, RegistrationForm , AddMutualFundsForm, AddStocksForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm
 from flask_login import login_required, current_user, login_user, logout_user
 from app.models import  User, Mutual_Funds, Stocks
 from werkzeug.urls import url_parse
@@ -85,7 +85,7 @@ def view_funds():
         db.session.commit()
         flash("Congratulations, you added a Mutual Fund")
         return redirect(url_for('view_funds'))
-    return render_template('mutualFunds.html',title='Mutual Funds', results=results, form=form, data = True)
+    return render_template('mutualFunds.html',title='Mutual Funds', results=results, form=form, grow=True, data=True)
 
 
 @app.route('/stocks',methods=['GET', 'POST'])
@@ -98,7 +98,7 @@ def view_stocks():
         db.session.commit()
         flash("Congratulations, you added a Stock!")
         return redirect(url_for('view_stocks'))
-    return render_template('stocks.html', title='Stocks', results=results, form=form, data = True)
+    return render_template('stocks.html', title='Stocks', results=results, form=form, grow=True, data=True)
     
 # @app.route('/test', methods=['GET'])
 # def test():
