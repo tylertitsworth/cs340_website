@@ -1,6 +1,8 @@
+from typing import Optional
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
-from wtforms.fields.core import FloatField
+from wtforms.fields.core import FloatField, IntegerField
+from wtforms.fields.simple import HiddenField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 from app.models import User
 
@@ -48,10 +50,11 @@ class AddMutualFundsForm(FlaskForm):
     dollars = FloatField('dollars',validators=[DataRequired()])
     total_mf_sector = FloatField('total_mf_sector',validators=[DataRequired()])
     submit = SubmitField('Submit')
-
+    
 class AddStocksForm(FlaskForm):
     ticker_symbol = StringField('ticker_symbol', validators=[DataRequired()])
     legal_name = StringField('legal_name', validators=[DataRequired()])
     total_shares = FloatField('total_shares',validators=[DataRequired()])
     current_price = FloatField('current_price',validators=[DataRequired()]) 
     submit = SubmitField('Submit')
+

@@ -19,6 +19,7 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('index') }}">{{ ('Home') }}</a></li>
                     <li><a href="{{ url_for('mutualFunds') }}">{{ ('Mutual Funds') }}</a></li>
+                    <li><a href="{{ url_for('view_stocks') }}">{{ ('Stocks') }}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}

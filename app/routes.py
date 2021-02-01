@@ -78,28 +78,69 @@ def edit_profile():
 @app.route('/mutualFunds',methods=['GET', 'POST'])
 def mutualFunds():
     results = Mutual_Funds.query.all()
-    form = AddMutualFundsForm()
-    if form.validate_on_submit():
-        mutual_fund = Mutual_Funds(name=form.name.data, dollars=form.dollars.data, total_mf_sector=form.total_mf_sector.data)
+    add_form = AddMutualFundsForm()
+    if add_form.validate_on_submit():
+        mutual_fund = Mutual_Funds(name=add_form.name.data, dollars=add_form.dollars.data, total_mf_sector=add_form.total_mf_sector.data)
         db.session.add(mutual_fund)
         db.session.commit()
         flash("Congratulations, you added a Mutual Fund")
         return redirect(url_for('mutualFunds'))
-    return render_template('mutualFunds.html',title='Mutual Funds', results=results, form=form, grow=True, data=True)
+    return render_template('mutualFunds.html',title='Mutual Funds', results=results, add_form=add_form,grow=True, data=True)
 
+@app.route('/deleteMutualFunds/<int:id>',methods=['GET', 'POST'])
+def deleteMutualFunds(id):
+    Mutual_Funds.query.filter_by(id=id).delete()
+    db.session.commit()
+    flash("Congratulations, you deleted a Mutual Fund")
+    return redirect(url_for('mutualFunds'))
+
+
+@app.route('/editMutualFunds/<int:id>',methods=['GET', 'POST'])
+def editMutualFunds(id):    
+    results = Mutual_Funds.query.filter_by(id=id).first_or_404()
+    form = AddMutualFundsForm(obj=results)
+    if form.validate_on_submit():
+        results.name=form.name.data
+        results.dollars=form.dollars.data
+        results.total_mf_sector=form.total_mf_sector.data
+        db.session.commit()
+        flash("Congratulations, you edited a Mutual Fund")
+        return redirect(url_for('mutualFunds'))
+    return render_template('editMutualFunds.html', title="Edit Funds",results=results.name,form=form,fund=True)
 
 @app.route('/stocks',methods=['GET', 'POST'])
 def view_stocks():
     results = Stocks.query.all()
     form = AddStocksForm()
     if form.validate_on_submit():
-        stock = Stocks(ticker_symbol=form.ticker_symbol.data, legal_name=form.legal_name.data, total_shares=form.total_shares.data, current_price=form.current_price.data)
-        db.session.add(stock)
+        new_stock = Stocks(ticker_symbol=form.ticker_symbol.data, legal_name=form.legal_name.data, total_shares=form.total_shares.data, current_price=form.current_price.data)
+        db.session.add(new_stock)
         db.session.commit()
         flash("Congratulations, you added a Stock!")
         return redirect(url_for('view_stocks'))
     return render_template('stocks.html', title='Stocks', results=results, form=form, grow=True, data=True)
-    
+
+@app.route('/editStocks/<int:id>',methods=['GET', 'POST'])
+def editStocks(id):
+    results = Stocks.query.filter_by(id=id).first_or_404()
+    form = AddStocksForm(obj=results)
+    if form.validate_on_submit():
+        results.ticker_symbol=form.ticker_symbol.data
+        results.legal_name=form.legal_name.data 
+        results.total_shares=form.total_shares.data 
+        results.current_price=form.current_price.data
+        db.session.commit()
+        flash("Congratulations, you edited a Stock!")
+        return redirect(url_for('view_stocks'))
+    return render_template('editStocks.html', title="Edit Stocks",results=results.legal_name,form=form,fund=True)
+
+@app.route('/deleteStocks/<int:id>',methods=['GET', 'POST'])
+def deleteStocks(id):
+    Stocks.query.filter_by(id=id).delete()
+    db.session.commit()
+    flash("Congratulations, you deleted a Stock!")
+    return redirect(url_for('view_stocks'))
+
 # @app.route('/test', methods=['GET'])
 # def test():
 #   results = Mutual_Funds.query.all()
