@@ -45,7 +45,7 @@ class Stocks(db.Model):
     current_price = db.Column(db.Float)
     
     def __repr__(self):
-        return '<Stocks {}>'.format(self.body)
+        return '<Stocks {}>'.format(self.id)
     
 
 @login.user_loader

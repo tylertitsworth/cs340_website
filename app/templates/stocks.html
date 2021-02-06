@@ -2,7 +2,22 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
-<table>
+
+<div class="container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-info" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {# application content needs to be provided in the app_content block #}
+    {% block app_content %}{% endblock %}
+</div>
+
+<div class="table-responsive" >
+<table class="table">
     <thead>
         <tr>
             <th>  id  </th>
@@ -10,6 +25,7 @@
             <th>  legal_name  </th>
             <th>  total_shares  </th>
             <th>  current_price  </th>
+            <th>  Edit/Delete  </th>
         </tr>
     </thead>
     <tbody> 
@@ -20,18 +36,27 @@
                 <td>{{  row.ticker_symbol  }}</td>
                 <td>{{  row.legal_name  }}</td>
                 <td>{{  row.total_shares  }}</td>
-                <td>{{  row.current_price  }}</td>
+                <td>${{  row.current_price  }}</td>
+                <td>
+                    <a href="{{url_for('editStocks', id=row.id)}}">
+                        <button type="button">  Edit  </button></a>
+                    <a href="{{url_for('deleteStocks', id=row.id)}}">
+                        <button type="button">  Delete  </button></a>
+                </td>
             </tr>
         {% endfor %}
         {% endif %}
     </tbody>
 </table>
+</div>
+
 {% if grow%}
-<h2>Add Stock</h2>
+<h3>Add Stock</h3>
 <div class="row">
     <div class="col-md-4">
         {{ wtf.quick_form(form) }}
     </div>
 </div>
 {% endif %}
+
 {% endblock %}
