@@ -45,6 +45,11 @@ class EditProfileForm(FlaskForm):
             if user is not None:
                 raise ValidationError('Please use a different username.')
 
+class AddPortfoliosForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
+    dollars = FloatField('dollars', validators=[DataRequired()], default="1000")
+    submit = SubmitField('Submit')
+
 class AddMutualFundsForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
     dollars = FloatField('dollars',validators=[DataRequired()])

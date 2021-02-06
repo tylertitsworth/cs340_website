@@ -8,7 +8,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    posts = db.relationship('Post', backref='author', lazy='dynamic')
+    portfolio = db.relationship('Portfolios', backref='owner', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -19,14 +19,16 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+class Portfolios(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    current_user_portfolio = db.Column(db.Boolean, nullable=False)
+    name = db.Column(db.String(64), index=True, unique=True)
+    dollars = db.Column(db.Float, nullable=False, default="1000.0")
+    total_mf_sector = db.Column(db.Float, nullable=True)
+    holdings = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<Post {}>'.format(self.body)
+        return '<Portfolios {}>'.format(self.body)
 
 class Mutual_Funds(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+{% if fund %}
+<div><h3>Portfolios: {{  results  }}</h3></div>
+{%  endif  %}
+
+<h3>Edit Portfolio</h3>
+<div class="row">
+    <div class="col-md-4">
+        {{ wtf.quick_form(form) }}
+    </div>
+</div>
+
+{% endblock %}

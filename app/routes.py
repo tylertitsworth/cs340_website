@@ -1,10 +1,11 @@
 import re
 from flask import render_template, flash, redirect, url_for, request
+from flask_login import current_user
 from sqlalchemy.orm import query
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm, AddPortfoliosForm
 from flask_login import login_required, current_user, login_user, logout_user
-from app.models import  User, Mutual_Funds, Stocks
+from app.models import  User, Mutual_Funds, Stocks, Portfolios
 from werkzeug.urls import url_parse
 from datetime import datetime
 
@@ -15,20 +16,38 @@ def before_request():
         db.session.commit()
 
 @app.route('/')
-@app.route('/index')
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    # see this variable
-    user = {'username': 'example'}
-    # variable store for a loop
-    posts = [
-        {
-            'author': {'username': 'example'},
-            'body': 'test_text1'
-        }
-    ]
-    # notice the variable inclusions in list form on the render_template() function
-    return render_template('index.html', title='Home Page', posts=posts)
+    results = Portfolios.query.all()
+    add_form = AddPortfoliosForm()
+    if add_form.validate_on_submit():
+        portfolio = Portfolios(name=add_form.name.data, dollars=add_form.dollars.data, current_user_portfolio=True)
+        db.session.add(portfolio)
+        db.session.commit()
+        flash("Congratulations, you added a Portfolio")
+        return redirect(url_for('index'))
+    return render_template('index.html', title='Portfolios', results=results, add_form=add_form, grow=True, data=True)
+
+@app.route('/editPortfolio/<int:id>',methods=['GET', 'POST'])
+def editPortfolio(id):
+    results = Portfolios.query.filter_by(id=id).first_or_404()
+    form = AddPortfoliosForm(obj=results)
+    if form.validate_on_submit():
+        results.name=form.name.data
+        results.dollars=form.dollars.data
+        db.session.commit()
+        flash("Congratulations, you edited a Portfolio")
+        return redirect(url_for('index'))
+    return render_template('editPortfolios.html', title="Edit Portfolio",results=results.name,form=form,fund=True)
+
+@app.route('/deletePortfolio/<int:id>',methods=['GET', 'POST'])
+def deletePortfolio(id):
+    Portfolios.query.filter_by(id=id).delete()
+    db.session.commit()
+    flash("Congratulations, you deleted a Portfolio!")
+    return redirect(url_for('index'))
+    return render_template('index.html', title='Home Page')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -140,6 +159,19 @@ def deleteStocks(id):
     db.session.commit()
     flash("Congratulations, you deleted a Stock!")
     return redirect(url_for('view_stocks'))
+
+@app.route('/addMutualFundtoPortfolio/<int:id>', methods=['GET', 'POST'])
+def addMutualFundtoPortfolio(id):
+    # id = portfolio id
+    results = Mutual_Funds.query.all()
+    return render_template('addMutualFund.html', title="Add a Mutual Fund to a Portfolio", results=results, data=True)
+
+@app.route('/addMutualFund/<int:id>', methods=['GET', 'POST'])
+def addMutualFund(id):
+    # id = Mutual Fund id
+    flash("test post, please ignore")
+    return redirect(url_for('index'))
+
 
 # @app.route('/test', methods=['GET'])
 # def test():

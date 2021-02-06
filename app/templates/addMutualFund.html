@@ -23,9 +23,8 @@
             <th>  ID  </th>
             <th>  name  </th>
             <th>  dollars  </th>
-            <th>  current_user_portfolio  </th>
-            <th>  Add Mutual Fund  </th>
-            <th>  Edit/Delete  </th>
+            <th>  total_mf_sector  </th>
+            <th>  Add to Portfolio  </th>
         </tr>
     </thead>
     <tbody>
@@ -35,16 +34,10 @@
                 <td>{{  row.id  }}</td>
                 <td>{{  row.name  }}</td>
                 <td>${{  row.dollars  }}</td>
-                <td>{{  row.current_user_portfolio  }}</td>
+                <td>{{  row.total_mf_sector  }}%</td>
                 <td>
-                    <a href="{{url_for('addMutualFundtoPortfolio', id=row.id)}}">
-                        <button type="button"> Add Mutual Fund </button></a>
-                </td>
-                <td>
-                    <a href="{{url_for('editPortfolio', id=row.id)}}">
-                        <button type="button">  Edit  </button></a>
-                    <a href="{{url_for('deletePortfolio', id=row.id)}}">
-                        <button type="button">  Delete  </button></a>
+                    <a href="{{url_for('addMutualFund', id=row.id)}}">
+                        <button type="button">  Add  </button></a>
                 </td>
             </tr>
         {% endfor %}
@@ -52,14 +45,5 @@
     </tbody>
 </table>
 </div>
-
-{% if grow%}
-<h3>Add Portfolio</h3>
-<div class="row">
-    <div class="col-md-4">
-        {{ wtf.quick_form(add_form) }}
-    </div>
-</div>
-{% endif %}
 
 {% endblock %}
