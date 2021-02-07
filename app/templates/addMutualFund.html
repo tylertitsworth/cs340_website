@@ -28,7 +28,7 @@
         </tr>
     </thead>
     <tbody>
-        {% if data%} 
+        {% if data %} 
         {% for row in results %}
             <tr>
                 <td>{{  row.id  }}</td>
@@ -36,7 +36,7 @@
                 <td>${{  row.dollars  }}</td>
                 <td>{{  row.total_mf_sector  }}%</td>
                 <td>
-                    <a href="{{url_for('addMutualFund', id=row.id)}}">
+                    <a href="{{url_for('addMutualFund', id=row.id, pid=pid)}}">
                         <button type="button">  Add  </button></a>
                 </td>
             </tr>

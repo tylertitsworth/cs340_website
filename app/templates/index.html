@@ -23,22 +23,22 @@
             <th>  ID  </th>
             <th>  name  </th>
             <th>  dollars  </th>
-            <th>  current_user_portfolio  </th>
-            <th>  Add Mutual Fund  </th>
+            <th>  Mutual Funds  </th>
             <th>  Edit/Delete  </th>
         </tr>
     </thead>
     <tbody>
-        {% if data%} 
+        {% if data %} 
         {% for row in results %}
             <tr>
                 <td>{{  row.id  }}</td>
                 <td>{{  row.name  }}</td>
                 <td>${{  row.dollars  }}</td>
-                <td>{{  row.current_user_portfolio  }}</td>
                 <td>
+                    <a href="{{url_for('viewMutualFunds', id=row.id)}}">
+                        <button type="button">View</button></a>
                     <a href="{{url_for('addMutualFundtoPortfolio', id=row.id)}}">
-                        <button type="button"> Add Mutual Fund </button></a>
+                        <button type="button">Add</button></a>
                 </td>
                 <td>
                     <a href="{{url_for('editPortfolio', id=row.id)}}">
@@ -53,7 +53,36 @@
 </table>
 </div>
 
-{% if grow%}
+{% if view %}
+<div class="table-responsive" >
+    <table class="table">
+        <thead>
+            <tr>
+                <th>  ID  </th>
+                <th>  name  </th>
+                <th>  dollars  </th>
+                <th>  total_mf_sector  </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if data %} 
+            {% for row in Mresults %}
+                <tr>
+                    <td>{{  row.id  }}</td>
+                    <td>{{  row.name  }}</td>
+                    <td>${{  row.dollars  }}</td>
+                    <td>{{  row.total_mf_sector  }}%</td>
+
+                </tr>
+            {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+
+{% if grow %}
 <h3>Add Portfolio</h3>
 <div class="row">
     <div class="col-md-4">

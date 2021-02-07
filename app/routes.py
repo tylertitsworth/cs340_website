@@ -19,10 +19,10 @@ def before_request():
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    results = Portfolios.query.all()
+    results = Portfolios.query.filter_by(user_id = current_user.get_id())
     add_form = AddPortfoliosForm()
     if add_form.validate_on_submit():
-        portfolio = Portfolios(name=add_form.name.data, dollars=add_form.dollars.data, current_user_portfolio=True)
+        portfolio = Portfolios(name=add_form.name.data, dollars=add_form.dollars.data, user_id=current_user.get_id())
         db.session.add(portfolio)
         db.session.commit()
         flash("Congratulations, you added a Portfolio")
@@ -43,6 +43,7 @@ def editPortfolio(id):
 
 @app.route('/deletePortfolio/<int:id>',methods=['GET', 'POST'])
 def deletePortfolio(id):
+    Mutual_Funds.query.filter_by(portfolio_id=id).update({"portfolio_id" : None}, synchronize_session='evaluate', update_args=None)
     Portfolios.query.filter_by(id=id).delete()
     db.session.commit()
     flash("Congratulations, you deleted a Portfolio!")
@@ -70,7 +71,6 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
-
     
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -90,9 +90,6 @@ def register():
 @login_required
 def edit_profile():
     form = EditProfileForm(current_user.username)
-
-
-
 
 @app.route('/mutualFunds',methods=['GET', 'POST'])
 def mutualFunds():
@@ -163,14 +160,30 @@ def deleteStocks(id):
 @app.route('/addMutualFundtoPortfolio/<int:id>', methods=['GET', 'POST'])
 def addMutualFundtoPortfolio(id):
     # id = portfolio id
-    results = Mutual_Funds.query.all()
-    return render_template('addMutualFund.html', title="Add a Mutual Fund to a Portfolio", results=results, data=True)
+    results = Mutual_Funds.query.filter_by(portfolio_id=None)
+    return render_template('addMutualFund.html', title="Add a Mutual Fund to a Portfolio", results=results, data=True, pid=id)
 
-@app.route('/addMutualFund/<int:id>', methods=['GET', 'POST'])
-def addMutualFund(id):
+@app.route('/addMutualFund/<int:id>/<int:pid>', methods=['GET', 'POST', 'PATCH'])
+def addMutualFund(id, pid):
     # id = Mutual Fund id
-    flash("test post, please ignore")
-    return redirect(url_for('index'))
+    # pid = Portfolio id
+    Mutual_Funds.query.filter_by(id=id).update({"portfolio_id" : pid}, synchronize_session='evaluate', update_args=None)
+    db.session.commit()
+    print("Mutual Fund", Mutual_Funds.query.filter_by(id=id), " added to Portfolio ", Portfolios.query.filter_by(id=pid), "!")
+    flash("Mutual Fund Added!")
+    add_form = AddPortfoliosForm()
+    results = Portfolios.query.filter_by(user_id=current_user.get_id())
+    Mresults = Mutual_Funds.query.filter_by(portfolio_id = pid)
+
+    return render_template('index.html', title="Home Page", Mresults=Mresults, results=results, add_form=add_form, grow=True, data=True, view=True)
+
+@app.route('/viewMutualFunds/<int:id>', methods=['GET', 'POST'])
+def viewMutualFunds(id):
+    # id = portfolio id
+    add_form = AddPortfoliosForm()
+    results = Portfolios.query.filter_by(user_id=current_user.get_id())
+    Mresults = Mutual_Funds.query.filter_by(portfolio_id = id)
+    return render_template('index.html', title="Home Page", Mresults=Mresults, results=results, add_form=add_form, grow=True, data=True, view=True)
 
 
 # @app.route('/test', methods=['GET'])
