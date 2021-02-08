@@ -22,10 +22,10 @@ class User(UserMixin, db.Model):
         return '<User {}>'.format(self.username)
 
 
-PortfoliosMutual_funds = db.table('PortfoliosMutual_funds',
-db.Column('pid',db.Integer,db.ForeignKey('portfolios.id'), primary_key=True),
-db.Column('id',db.Integer,db.ForeignKey('mutual_funds.id'), primary_key=True)
-)
+# PortfoliosMutual_funds = db.table('PortfoliosMutual_funds',
+# db.Column('pid',db.Integer,db.ForeignKey('portfolios.id'), primary_key=True),
+# db.Column('id',db.Integer,db.ForeignKey('mutual_funds.id'), primary_key=True)
+# )
 
 class Portfolios(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -43,24 +43,19 @@ class Mutual_Funds(db.Model):
     dollars = db.Column(db.Float)
     total_mf_sector = db.Column(db.Float)
     portfolio_id = db.Column(db.Integer, db.ForeignKey('portfolios.id'))
-    stocks = db.relationship('Stocks',backref='mutual_funds_stocks', lazy = 'dynamic')
+    stocks = db.relationship('Stocks',backref='current_fund_price', lazy = 'dynamic')
     def __repr__(self):
         return '<Mutual_Funds {}>'.format(self.id)
 
-class Mutual_Funds_Stocks(declarative_base()):
-    __tablename__ = 'mutual_funds_stocks'
+class current_fund_price(db.Model):
+    __tablename__ = 'current_fund_price'
     mutual_funds_id = db.Column(db.Integer, db.ForeignKey('mutual_funds.id'),primary_key=True)
     stocks_id = db.Column(db.Integer, db.ForeignKey('stocks.id'),primary_key=True)
 
     __table_args__ = (
-        ForeignKeyConstraint(['stocks_id'],['stocks.id']),
+        db.ForeignKeyConstraint(['stocks_id'],['stocks.id']),
     )
 
-# Mutual_Funds_Stocks = db.table(
-#     'Mutual_Funds_Stocks', 
-#     db.Column('mfid' ,db.Integer, db.ForeignKey('mutual_funds.id'),primary_key=True),
-#    db.Column('id' ,db.Integer, db.ForeignKey('stocks.id'),primary_key=True)    
-# )
     
 class Stocks(db.Model):
     __tablename__ = 'stocks'
@@ -69,8 +64,8 @@ class Stocks(db.Model):
     legal_name = db.Column(db.String(128), index=True, unique=True)
     total_shares = db.Column(db.Float)
     current_price = db.Column(db.Float)
-    mutual_funds_id = db.Column(db.Integer,db.ForeignKey('mutual_funds.id'))
-    mutual_funds = db.relationship('Mutual_Funds',backref='mutual_funds_stocks',lazy='dynamic')
+
+    mutual_funds = db.relationship('Mutual_Funds',backref='current_fund_price',lazy='dynamic')
     
     def __repr__(self):
         return '<Stocks {}>'.format(self.id)
