@@ -24,7 +24,10 @@
             <th>  name  </th>
             <th>  dollars  </th>
             <th>  total_mf_sector  </th>
+            <th>  portfolio id  </th>
             <th>  Edit/Delete  </th>
+
+            <th>  Add  </th>
         </tr>
     </thead>
     <tbody>
@@ -35,11 +38,16 @@
                 <td>{{  row.name  }}</td>
                 <td>${{  row.dollars  }}</td>
                 <td>{{  row.total_mf_sector  }}%</td>
+                <td> {{  row.portfolio_id  }} </td>
                 <td>
                     <a href="{{url_for('editMutualFunds', id=row.id)}}">
                         <button type="button">  Edit  </button></a>
                     <a href="{{url_for('deleteMutualFunds', id=row.id)}}">
                         <button type="button">  Delete  </button></a>
+                </td>
+                <td>
+                    <a href="{{url_for('addHoldings', id=row.id)}}">
+                        <button type="button">Add</button></a>
                 </td>
             </tr>
         {% endfor %}

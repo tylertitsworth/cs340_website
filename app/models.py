@@ -1,3 +1,4 @@
+from sqlalchemy.ext.declarative.api import declarative_base
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_login import UserMixin
@@ -19,32 +20,48 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
+
+PortfoliosMutual_funds = db.table('PortfoliosMutual_funds',
+db.Column('pid',db.Integer,db.ForeignKey('portfolios.id'), primary_key=True),
+db.Column('id',db.Integer,db.ForeignKey('mutual_funds.id'), primary_key=True)
+)
+
 class Portfolios(db.Model):
+    __tablename__ = 'portfolios'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(64), index=True, unique=True)
     dollars = db.Column(db.Float, nullable=False, default="1000.0")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    mutual_funds = db.relationship('Mutual_Funds', backref='portfolio', lazy='dynamic')
+    mutual_funds = db.relationship('Mutual_Funds',backref='portfolios', lazy='dynamic')
 
     def __repr__(self):
         return '<Portfolios {}>'.format(self.body)
 
 class Mutual_Funds(db.Model):
+    __tablename__ = 'mutual_funds'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
     dollars = db.Column(db.Float)
     total_mf_sector = db.Column(db.Float)
     portfolio_id = db.Column(db.Integer, db.ForeignKey('portfolios.id'))
-
+    stocks = db.relationship('Stocks',backref='mutual_funds', lazy = 'dynamic')
     def __repr__(self):
         return '<Mutual_Funds {}>'.format(self.id)
 
+Mutual_Funds_Stocks = db.table(
+    'Mutual_Funds_Stocks', 
+    db.Column('mfid' ,db.Integer, db.ForeignKey('mutual_funds.id'),primary_key=True),
+   db.Column('id' ,db.Integer, db.ForeignKey('stocks.id'),primary_key=True)    
+)
+    
 class Stocks(db.Model):
+    __tablename__ = 'stocks'
     id = db.Column(db.Integer, primary_key=True)
     ticker_symbol = db.Column(db.String(32), index=True, unique=True)
     legal_name = db.Column(db.String(128), index=True, unique=True)
     total_shares = db.Column(db.Float)
     current_price = db.Column(db.Float)
+    mutual_funds_id = db.Column(db.Integer,db.ForeignKey('mutual_funds.id'))
     
     def __repr__(self):
         return '<Stocks {}>'.format(self.id)
