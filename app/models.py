@@ -22,10 +22,6 @@ class User(UserMixin, db.Model):
         return '<User {}>'.format(self.username)
 
 
-# PortfoliosMutual_funds = db.table('PortfoliosMutual_funds',
-# db.Column('pid',db.Integer,db.ForeignKey('portfolios.id'), primary_key=True),
-# db.Column('id',db.Integer,db.ForeignKey('mutual_funds.id'), primary_key=True)
-# )
 
 class Portfolios(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
