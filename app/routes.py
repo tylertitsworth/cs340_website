@@ -188,27 +188,25 @@ def viewMutualFunds(id):
 @app.route('/addHoldings/<int:id>', methods=['GET', 'POST'])
 def addHoldings(id):
     # id = mfund id
-    # id = PortfoliosMutual_funds(id=id)
-    results = Stocks.query.all()
+    results = Stocks.query.all() # Query all Stocks that aren't in the current mutual fund
     return render_template('addtoHoldings.html', title="Add a Mutual Fund to a Portfolio", results=results, data=True, pid=id)
 
 @app.route('/addtoHoldings/<int:id>/<int:pid>', methods=['GET', 'POST'])
-def addtoHoldings(id,pid):
+def addtoHoldings(id, pid):
     # id = mfund id
     # id = PortfoliosMutual_funds(id=id)
-    Stocks.query.filter_by(id=id).update({"mutual_funds_id" : pid}, synchronize_session='evaluate', update_args=None)
+    Stocks.query.filter_by(id=id).update({"id" : pid}, synchronize_session='evaluate', update_args=None) # update the variable @ id with the stock id given @ pid
     db.session.commit()
-    print("Stocks", Stocks.query.filter_by(id=id), " added to Mutual Fund ", Mutual_Funds.query.filter_by(id=pid), "!")
+    print("Stocks", Stocks.query.filter_by(id=id), " added to Mutual Fund ", Mutual_Funds.query.filter_by(id=pid), "!") # fix queries to test sql transaction
     flash("Stock Added!")
     add_form = AddPortfoliosForm()
     results = Mutual_Funds.query.filter_by(id=id)
-    Mresults = Stocks.query.filter_by(mutual_funds_id = pid)
     # return redirect(url_for('view_stocks'))
-    return render_template('addtoHoldings.html', title="Add a Mutual Fund to a Portfolio", results=results, Mresults=Mresults,  data=True, pid=id)
+    return render_template('mutualFunds.html', title="Mutual Funds", results=results data=True, add_form=add_form, grow=True)
 
 @app.route('/viewHoldings/<int:id>', methods=['GET'])
 def viewHoldings(id):
     add_form = AddMutualFundsForm()
     results = Mutual_Funds.query.all()
-    Mresults = Stocks.query.filter_by(mutual_fund_id = id)
+    Mresults = Stocks.query.filter_by(id = id) # Query all Stocks in the current mutual fund @ id
     return render_template('mutualFunds.html', title="Mutual Funds", Mresults=Mresults, results=results, add_form=add_form, grow=True, data=True, view=True)
