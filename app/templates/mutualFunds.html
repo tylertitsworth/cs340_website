@@ -26,8 +26,7 @@
             <th>  total_mf_sector  </th>
             <th>  portfolio id  </th>
             <th>  Edit/Delete  </th>
-
-            <th>  Add  </th>
+            <th>  Stocks  </th>
         </tr>
     </thead>
     <tbody>
@@ -46,6 +45,8 @@
                         <button type="button">  Delete  </button></a>
                 </td>
                 <td>
+                    <a href="{{url_for('viewHoldings', id=row.id)}}">
+                        <button type="button">View</button></a>
                     <a href="{{url_for('addHoldings', id=row.id)}}">
                         <button type="button">Add</button></a>
                 </td>
@@ -55,6 +56,35 @@
     </tbody>
 </table>
 </div>
+
+{% if view %}
+<div class="table-responsive" >
+    <table class="table">
+        <thead>
+            <tr>
+                <th>  ID  </th>
+                <th>  ticker symbol  </th>
+                <th>  legal name  </th>
+                <th>  total shares  </th>
+                <th>  current price  </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if data %} 
+            {% for row in Mresults %}
+                <tr>
+                    <td>{{  row.id  }}</td>
+                    <td>{{  row.ticket_symbol  }}</td>
+                    <td>${{  row.legal_name  }}</td>
+                    <td>{{  row.total_shares  }}%</td>
+                    <td>{{  row.current_price  }}%</td>
+                </tr>
+            {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
 
 {% if grow%}
 <h3>Add Mutual Funds</h3>

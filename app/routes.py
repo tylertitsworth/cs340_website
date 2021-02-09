@@ -5,7 +5,7 @@ from sqlalchemy.orm import query
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm, AddPortfoliosForm
 from flask_login import login_required, current_user, login_user, logout_user
-from app.models import  current_fund_price, User, Mutual_Funds, Stocks, Portfolios
+from app.models import User, Mutual_Funds, Stocks, Portfolios
 from werkzeug.urls import url_parse
 from datetime import datetime
 
@@ -157,31 +157,9 @@ def deleteStocks(id):
     flash("Congratulations, you deleted a Stock!")
     return redirect(url_for('view_stocks'))
 
-@app.route('/addHoldings/<int:id>', methods=['GET', 'POST'])
-def addHoldings(id):
-    # id = mfund id
-    # id = PortfoliosMutual_funds(id=id)
-    results = Stocks.query.filter_by(id=id)
-    return render_template('addtoHoldings.html', title="Add a Mutual Fund to a Portfolio", results=results, data=True, pid=id)
-
-@app.route('/addtoHoldings/<int:id>/<int:pid>', methods=['GET', 'POST'])
-def addtoHoldings(id,pid):
-    # id = mfund id
-    # id = PortfoliosMutual_funds(id=id)
-    Stocks.query.filter_by(id=id).update({"mutual_funds_id" : pid}, synchronize_session='evaluate', update_args=None)
-    db.session.commit()
-    print("Stocks", Stocks.query.filter_by(id=id), " added to Mutual Fundfs ", Mutual_Funds.query.filter_by(id=pid), "!")
-    flash("Stock Added!")
-    add_form = AddPortfoliosForm()
-    results = Mutual_Funds.query.filter_by(id=id)
-    Mresults = Stocks.query.filter_by(mutual_funds_id = pid)
-    # return redirect(url_for('view_stocks'))
-    return render_template('addtoHoldings.html', title="Add a Mutual Fund to a Portfolio", results=results, data=True, pid=id)
-
 @app.route('/addMutualFundtoPortfolio/<int:id>', methods=['GET', 'POST'])
 def addMutualFundtoPortfolio(id):
     # id = portfolio id
-    # id = PortfoliosMutual_funds(id=id)
     results = Mutual_Funds.query.filter_by(portfolio_id=id)
     return render_template('addMutualFund.html', title="Add a Mutual Fund to a Portfolio", results=results, data=True, pid=id)
 
@@ -189,7 +167,6 @@ def addMutualFundtoPortfolio(id):
 def addMutualFund(id, pid):
     # id = Mutual Fund id
     # pid = Portfolio id
-    # pid = PortfoliosMutual_funds(pid = pid)
     Mutual_Funds.query.filter_by(id=id).update({"portfolio_id" : pid}, synchronize_session='evaluate', update_args=None)
     db.session.commit()
     print("Mutual Fund", Mutual_Funds.query.filter_by(id=id), " added to Portfolio ", Portfolios.query.filter_by(id=pid), "!")
@@ -208,9 +185,30 @@ def viewMutualFunds(id):
     Mresults = Mutual_Funds.query.filter_by(portfolio_id = id)
     return render_template('index.html', title="Home Page", Mresults=Mresults, results=results, add_form=add_form, grow=True, data=True, view=True)
 
+@app.route('/addHoldings/<int:id>', methods=['GET', 'POST'])
+def addHoldings(id):
+    # id = mfund id
+    # id = PortfoliosMutual_funds(id=id)
+    results = Stocks.query.all()
+    return render_template('addtoHoldings.html', title="Add a Mutual Fund to a Portfolio", results=results, data=True, pid=id)
 
-# @app.route('/test', methods=['GET'])
-# def test():
-#   results = Mutual_Funds.query.all()
-#   print(results)
-#   return render_template('test.html',title = 'TEST',results = results)
+@app.route('/addtoHoldings/<int:id>/<int:pid>', methods=['GET', 'POST'])
+def addtoHoldings(id,pid):
+    # id = mfund id
+    # id = PortfoliosMutual_funds(id=id)
+    Stocks.query.filter_by(id=id).update({"mutual_funds_id" : pid}, synchronize_session='evaluate', update_args=None)
+    db.session.commit()
+    print("Stocks", Stocks.query.filter_by(id=id), " added to Mutual Fund ", Mutual_Funds.query.filter_by(id=pid), "!")
+    flash("Stock Added!")
+    add_form = AddPortfoliosForm()
+    results = Mutual_Funds.query.filter_by(id=id)
+    Mresults = Stocks.query.filter_by(mutual_funds_id = pid)
+    # return redirect(url_for('view_stocks'))
+    return render_template('addtoHoldings.html', title="Add a Mutual Fund to a Portfolio", results=results, Mresults=Mresults,  data=True, pid=id)
+
+@app.route('/viewHoldings/<int:id>', methods=['GET'])
+def viewHoldings(id):
+    add_form = AddMutualFundsForm()
+    results = Mutual_Funds.query.all()
+    Mresults = Stocks.query.filter_by(mutual_fund_id = id)
+    return render_template('mutualFunds.html', title="Mutual Funds", Mresults=Mresults, results=results, add_form=add_form, grow=True, data=True, view=True)
