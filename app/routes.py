@@ -5,7 +5,7 @@ from sqlalchemy.orm import query
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm, AddPortfoliosForm
 from flask_login import login_required, current_user, login_user, logout_user
-from app.models import  PortfoliosMutual_funds, User, Mutual_Funds, Stocks, Portfolios
+from app.models import  current_fund_price, User, Mutual_Funds, Stocks, Portfolios
 from werkzeug.urls import url_parse
 from datetime import datetime
 

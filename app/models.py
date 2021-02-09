@@ -33,25 +33,23 @@ class Portfolios(db.Model):
     def __repr__(self):
         return '<Portfolios {}>'.format(self.body)
 
+
+
+
 class Mutual_Funds(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
     dollars = db.Column(db.Float)
     total_mf_sector = db.Column(db.Float)
     portfolio_id = db.Column(db.Integer, db.ForeignKey('portfolios.id'))
-    stocks = db.relationship('Stocks',backref='current_fund_price', lazy = 'dynamic')
+    stocks_id = db.Column(db.Integer, db.ForeignKey('stocks.id'))
+    stocks = db.relationship('Stocks',secondary='current_fund_price')
     def __repr__(self):
         return '<Mutual_Funds {}>'.format(self.id)
 
-class current_fund_price(db.Model):
-    __tablename__ = 'current_fund_price'
-    mutual_funds_id = db.Column(db.Integer, db.ForeignKey('mutual_funds.id'),primary_key=True)
-    stocks_id = db.Column(db.Integer, db.ForeignKey('stocks.id'),primary_key=True)
-
-    __table_args__ = (
-        db.ForeignKeyConstraint(['stocks_id'],['stocks.id']),
-    )
-
+current_fund_price = db.Table('current_fund_price',
+    db.Column('mutual_funds_id',db.Integer, db.ForeignKey(Mutual_Funds.id)),
+    db.Column('stocks_id',db.Integer, db.ForeignKey('stocks.id')))
     
 class Stocks(db.Model):
     __tablename__ = 'stocks'
@@ -60,9 +58,9 @@ class Stocks(db.Model):
     legal_name = db.Column(db.String(128), index=True, unique=True)
     total_shares = db.Column(db.Float)
     current_price = db.Column(db.Float)
-
-    mutual_funds = db.relationship('Mutual_Funds',backref='current_fund_price',lazy='dynamic')
-    
+    mutual_funds_id = db.Column(db.Integer, db.ForeignKey('Mutual_Funds.id'))
+    mutual_funds = db.relationship('Mutual_Funds',secondary='current_fund_price',primaryjoin=(current_fund_price.c.stocks_id== id),backref=db.backref('current_fund_price', lazy='dynamic'), lazy='dynamic')
+    #stocks_id = db.relationship('Stocks',secondary='current_fund_price',primaryjoin=(current_fund_price.c.stock_id== id),backref=db.backref('current_fund_price', lazy='dynamic'), lazy='dynamic')
     def __repr__(self):
         return '<Stocks {}>'.format(self.id)
     
