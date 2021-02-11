@@ -2,14 +2,14 @@ import re
 from flask import render_template, flash, redirect, url_for, request,json
 from flask_login import current_user
 from sqlalchemy.engine.base import Engine
-from sqlalchemy.orm import query
+from sqlalchemy.orm import Query,query
 from sqlalchemy.sql import text 
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm, AddPortfoliosForm
 from flask_login import login_required, current_user, login_user, logout_user
-from app.models import User, Mutual_Funds, Stocks, Portfolios
+from app.models import User, Mutual_Funds, Stocks, Portfolios,current_fund_price
 from werkzeug.urls import url_parse
-from datetime import datetime
+from datetime import date, datetime, timedelta
 
 @app.before_request
 def before_request():
@@ -190,15 +190,20 @@ def viewMutualFunds(id):
 @app.route('/addHoldings/<int:id>', methods=['GET', 'POST'])
 def addHoldings(id):
     # id = mfund id
-    results = Stocks.query.filter_by(mfid=None)
+    results = Stocks.query.all()#filter_by(mf_rel=None)
     return render_template('addtoHoldings.html', title="Add a Mutual Fund to a Portfolio", results=results, data=True, pid=id)
 
 @app.route('/addtoHoldings/<int:id>/<int:pid>', methods=['GET', 'POST'])
 def addtoHoldings(id,pid):
     # id = mfund id
     # id = PortfoliosMutual_funds(id=id)
-    Stocks.query.filter_by(id=id).update({"mfid" : pid}, synchronize_session='evaluate', update_args=None)
+    # Stocks.query.filter_by(id=id).update({"mfid" : pid}, synchronize_session='evaluate', update_args=None)
+    # Mutual_Funds.query.filter_by(id=pid).update({"sid" : id}, synchronize_session='evaluate', update_args=None)
+    # db.session.commit()
+    cfp = current_fund_price(mf_id=pid,stocks_id=id)
+    db.session.add(cfp)
     db.session.commit()
+    print(current_fund_price.query.all())
     print("Stocks", Stocks.query.filter_by(id=id), " added to Mutual Fund ", Mutual_Funds.query.filter_by(id=pid), "!")
     flash("Stock Added!")
     add_form = AddPortfoliosForm()
@@ -211,7 +216,8 @@ def addtoHoldings(id,pid):
 def viewHoldings(id):
     add_form = AddMutualFundsForm()
     results = Mutual_Funds.query.all()
-    Mresults = Stocks.query.filter_by(mfid = id)
+    Mresults = Stocks.query.filter(Stocks.mf_rel.any(id=id)) #filter_by(mfid = id)
+    #Mresults=current_fund_price.query.filter_by(mf_id=id)
     return render_template('mutualFunds.html', title="Mutual Funds", Mresults=Mresults, results=results, add_form=add_form, grow=True, data=True, view=True)
 
 
@@ -219,5 +225,56 @@ def viewHoldings(id):
 def test():
     something = text("SELECT * FROM stocks;")
     tst = db.session.execute(something)
-    results = tst
+    results = []
+    qTest1 = db.session.query(Mutual_Funds)
+    qTest2 = db.session.query(Stocks)
+    qTest3 = db.session.query(current_fund_price)
+    # qTest4 = db.session.query(Mutual_Funds)
+    mf_tests = [qTest1,qTest2,qTest3]
+    for q in mf_tests:
+        print(render_query(q,db.session))
+        results.append(render_query(q,db.session))
+    print(current_fund_price.query.all())
+
     return render_template('test.html',title='test',results=results)
+
+def render_query(statement, db_session):
+    """
+    Generate an SQL expression string with bound parameters rendered inline
+    for the given SQLAlchemy statement.
+    WARNING: This method of escaping is insecure, incomplete, and for debugging
+    purposes only. Executing SQL statements with inline-rendered user values is
+    extremely insecure.
+    Based on http://stackoverflow.com/questions/5631078/sqlalchemy-print-the-actual-query
+    """
+    if isinstance(statement, Query):
+        statement = statement.statement
+    dialect = db_session.bind.dialect
+
+    class LiteralCompiler(dialect.statement_compiler):
+        def visit_bindparam(
+            self, bindparam, within_columns_clause=False, literal_binds=False, **kwargs
+        ):
+            return self.render_literal_value(bindparam.value, bindparam.type)
+
+        def render_array_value(self, val, item_type):
+            if isinstance(val, list):
+                return "{}".format(
+                    ",".join([self.render_array_value(x, item_type) for x in val])
+                )
+            return self.render_literal_value(val, item_type)
+
+        def render_literal_value(self, value, type_):
+            if isinstance(value, int):
+                return str(value)
+            elif isinstance(value, (str, date, datetime, timedelta)):
+                return "'{}'".format(str(value).replace("'", "''"))
+            elif isinstance(value, list):
+                return "'{{{}}}'".format(
+                    ",".join(
+                        [self.render_array_value(x, type_.item_type) for x in value]
+                    )
+                )
+            return super(LiteralCompiler, self).render_literal_value(value, type_)
+
+    return LiteralCompiler(dialect, statement).process(statement)
