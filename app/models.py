@@ -29,8 +29,7 @@ class Portfolios(db.Model):
     name = db.Column(db.String(64), index=True, unique=True)
     dollars = db.Column(db.Float, nullable=False, default="1000.0")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    mutual_funds = db.relationship('Mutual_Funds',backref='portfolios', lazy='dynamic')
-
+    mutual_fund = db.relationship('Mutual_Funds',backref='portfolios', lazy='dynamic')
     def __repr__(self):
         return '<Portfolios {}>'.format(self.body)
 
@@ -49,14 +48,28 @@ class Mutual_Funds(db.Model):
     dollars = db.Column(db.Float)
     total_mf_sector = db.Column(db.Float)
     portfolio_id = db.Column(db.Integer, db.ForeignKey('portfolios.id'))
-    stocks_id = db.Column(db.Integer, db.ForeignKey('stocks.id'))
-    stocks = db.relationship('current_fund_price',back_populates='mf_id')
-    # stocks = db.relationship('Stocks',secondary='current_fund_price')
+    sid = db.Column(db.Integer, db.ForeignKey('stocks.id'))
+    stock_rel = relationship("Stocks",secondary='current_fund_price')
     def __repr__(self):
         return '<Mutual_Funds {}>'.format(self.id)
+    # mutual_funds = db.relationship(
+    #     'Mutual_Funds',
+    #     secondary='current_fund_price',
+    #     primaryjoin=(current_fund_price.c.mfid== id),
+    #     backref=db.backref('current_fund_price', lazy='dynamic'), 
+    #     lazy='dynamic'
+    # )
+    #sid = db.relationship('stocks',back_populates='mf_id', secondary='current_fund_price')
 
 
+class current_fund_price(db.Model):
+   __tablename__ = 'current_fund_price'
+   mf_id = db.Column(db.Integer, db.ForeignKey('mutual_funds.id'),primary_key=True)
+   stocks_id = db.Column(db.Integer, db.ForeignKey('stocks.id'),primary_key=True)
+   stock = db.relationship('Stocks',backref=backref('current_fund_price',cascade="all,delete-orphan"))
+   mfund = db.relationship('Mutual_Funds',backref=backref('current_fund_price',cascade="all,delete-orphan"))
     
+
 class Stocks(db.Model):
     __tablename__ = 'stocks'
     id = db.Column(db.Integer, primary_key=True)
@@ -64,12 +77,25 @@ class Stocks(db.Model):
     legal_name = db.Column(db.String(128), index=True, unique=True)
     total_shares = db.Column(db.Float)
     current_price = db.Column(db.Float)
-    mf_id = db.relationship('current_fund_price',back_populates='stocks')
-    # mutual_funds_id = db.Column(db.Integer, db.ForeignKey('Mutual_Funds.id'))
-    # mutual_funds = db.relationship('Mutual_Funds',secondary='current_fund_price',primaryjoin=(current_fund_price.c.stocks_id== id),backref=db.backref('current_fund_price', lazy='dynamic'), lazy='dynamic')
-    # stocks_id = db.relationship('Stocks',secondary='current_fund_price',primaryjoin=(current_fund_price.c.stock_id== id),backref=db.backref('current_fund_price', lazy='dynamic'), lazy='dynamic')
+    mfid = db.Column(db.Integer, db.ForeignKey('mutual_funds.id'))
+    mf_rel = relationship('Mutual_Funds',secondary="current_fund_price")
+
     def __repr__(self):
         return '<Stocks {}>'.format(self.id)
+        
+    # mfs = db.relationship('current_fund_price',back_populates='stocks')
+    # mf_id = db.relationship('current_fund_price',back_populates='stocks')
+    # stocks_id = db.relationship(
+    #     'Stocks',
+    #     secondary='current_fund_price',
+    #     primaryjoin=(current_fund_price.c.sid== id),
+    #     backref=db.backref('current_fund_price', lazy='dynamic'), 
+    #     lazy='dynamic'
+    # )
+
+
+    #mf_id = db.relationship('mutual_funds',back_populates='sid', secondary='current_fund_price')
+
     
 
 @login.user_loader

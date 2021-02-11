@@ -27,7 +27,6 @@
             <th>  current_price  </th>
             <th>  Mutual Fund ID  </th>
             <th>  Edit/Delete  </th>
-            <th>  Add  </th>
         </tr>
     </thead>
     <tbody> 
@@ -45,10 +44,6 @@
                         <button type="button">  Edit  </button></a>
                     <a href="{{url_for('deleteStocks', id=row.id)}}">
                         <button type="button">  Delete  </button></a>
-                </td>
-                <td>
-                    <a href="{{url_for('addHoldings', id=row.id)}}">
-                        <button type="button">  Add  </button></a>
                 </td>
             </tr>
         {% endfor %}
