@@ -35,6 +35,7 @@ class Portfolios(db.Model):
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 class current_fund_price(db.Model):
     __tablename__ = 'current_fund_price'
     mutual_funds_id= db.Column(db.Integer, db.ForeignKey('mutual_funds.id'),primary_key=True)
@@ -42,13 +43,24 @@ class current_fund_price(db.Model):
     stocks =  db.relationship('Stocks',back_populates='mf_id')
     mf_id =  db.relationship('Mutual_Funds',back_populates='stocks')
 =======
+=======
+>>>>>>> a35dbb931e5d953b35156b129629c54f29ae30e5
 # current_fund_price = db.table(
 #     'current_fund_price',
 #     db.Column('mfid',db.Integer,db.ForeignKey('mutual_funds.id'), primary_key=True),
 #     db.Column('sid',db.Integer,db.ForeignKey('stocks.id'), primary_key=True)
 # )
+<<<<<<< HEAD
 
 >>>>>>> danbranch
+=======
+# class current_fund_price(db.Model):
+#    __tablename__ = 'current_fund_price'
+#    mutual_funds_id = db.Column(db.Integer, db.ForeignKey('mutual_funds.id'),primary_key=True)
+#    stocks_id = db.Column(db.Integer, db.ForeignKey('stocks.id'),primary_key=True)
+#    stocks =  db.relationship('Stocks',back_populates='mf_id')
+#    mf_id =  db.relationship('Mutual_Funds',back_populates='stocks')
+>>>>>>> a35dbb931e5d953b35156b129629c54f29ae30e5
 
 class Mutual_Funds(db.Model):
     __tablename__='mutual_funds'
@@ -58,6 +70,7 @@ class Mutual_Funds(db.Model):
     total_mf_sector = db.Column(db.Float)
     portfolio_id = db.Column(db.Integer, db.ForeignKey('portfolios.id'))
 <<<<<<< HEAD
+<<<<<<< HEAD
     stocks_id = db.Column(db.Integer, db.ForeignKey('stocks.id'))
     stocks = db.relationship('current_fund_price',back_populates='mf_id')
     # stocks = db.relationship('Stocks',secondary='current_fund_price')
@@ -65,6 +78,11 @@ class Mutual_Funds(db.Model):
     sid = db.Column(db.Integer, db.ForeignKey('stocks.id'))
     stock_rel = relationship("Stocks",secondary='current_fund_price')
 >>>>>>> danbranch
+=======
+    sid = db.Column(db.Integer, db.ForeignKey('stocks.id'))
+    stock = db.relationship('Stocks',backref=backref('mutual_funds',cascade="all,delete-orphan"))
+    portfolio = db.relationship('Portfolios',backref=backref('mutual_funds',cascade="all,delete-orphan"))
+>>>>>>> a35dbb931e5d953b35156b129629c54f29ae30e5
     def __repr__(self):
         return '<Mutual_Funds {}>'.format(self.id)
     # mutual_funds = db.relationship(
@@ -93,6 +111,7 @@ class Stocks(db.Model):
     total_shares = db.Column(db.Float)
     current_price = db.Column(db.Float)
 <<<<<<< HEAD
+<<<<<<< HEAD
     mf_id = db.relationship('current_fund_price',back_populates='stocks')
     # mutual_funds_id = db.Column(db.Integer, db.ForeignKey('Mutual_Funds.id'))
     # mutual_funds = db.relationship('Mutual_Funds',secondary='current_fund_price',primaryjoin=(current_fund_price.c.stocks_id== id),backref=db.backref('current_fund_price', lazy='dynamic'), lazy='dynamic')
@@ -103,6 +122,10 @@ class Stocks(db.Model):
     mfid = db.Column(db.Integer, db.ForeignKey('mutual_funds.id'))
     mf_rel = relationship('Mutual_Funds',secondary="current_fund_price")
 
+=======
+    mfid = db.Column(db.Integer, db.ForeignKey('Mutual_Funds.id'))
+    portfol = relationship('Portfolios',secondary="mutual_funds")
+>>>>>>> a35dbb931e5d953b35156b129629c54f29ae30e5
     def __repr__(self):
         return '<Stocks {}>'.format(self.id)
         
@@ -119,7 +142,10 @@ class Stocks(db.Model):
 
     #mf_id = db.relationship('mutual_funds',back_populates='sid', secondary='current_fund_price')
 
+<<<<<<< HEAD
 >>>>>>> danbranch
+=======
+>>>>>>> a35dbb931e5d953b35156b129629c54f29ae30e5
     
 
 @login.user_loader
