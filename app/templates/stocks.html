@@ -25,7 +25,6 @@
             <th>  legal_name  </th>
             <th>  total_shares  </th>
             <th>  current_price  </th>
-            <th>  Mutual Fund ID  </th>
             <th>  Edit/Delete  </th>
         </tr>
     </thead>
@@ -38,7 +37,6 @@
                 <td>{{  row.legal_name  }}</td>
                 <td>{{  row.total_shares  }}</td>
                 <td>${{  row.current_price  }}</td>
-                <td>{{  row.mutual_funds_id  }}</td>
                 <td> 
                     <a href="{{url_for('editStocks', id=row.id)}}">
                         <button type="button">  Edit  </button></a>

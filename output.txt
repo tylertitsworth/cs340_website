@@ -1,0 +1,197 @@
+CREATE TABLE alembic_version (
+    version_num VARCHAR(32) NOT NULL, 
+    CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num)
+);
+
+-- Running upgrade  -> 8cf6354330ae
+
+CREATE TABLE mutual_funds (
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    name VARCHAR(64), 
+    dollars FLOAT, 
+    total_mf_sector FLOAT, 
+    portfolio_id INTEGER, 
+    sid INTEGER, 
+    PRIMARY KEY (id), 
+    FOREIGN KEY(portfolio_id) REFERENCES portfolios (id), 
+    FOREIGN KEY(sid) REFERENCES stocks (id)
+);
+
+CREATE UNIQUE INDEX ix_mutual_funds_name ON mutual_funds (name);
+
+CREATE TABLE stocks (
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    ticker_symbol VARCHAR(32), 
+    legal_name VARCHAR(128), 
+    total_shares FLOAT, 
+    current_price FLOAT, 
+    mfid INTEGER, 
+    PRIMARY KEY (id), 
+    FOREIGN KEY(mfid) REFERENCES mutual_funds (id)
+);
+
+CREATE UNIQUE INDEX ix_stocks_legal_name ON stocks (legal_name);
+
+CREATE UNIQUE INDEX ix_stocks_ticker_symbol ON stocks (ticker_symbol);
+
+CREATE TABLE user (
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    username VARCHAR(64), 
+    email VARCHAR(120), 
+    password_hash VARCHAR(128), 
+    PRIMARY KEY (id)
+);
+
+CREATE UNIQUE INDEX ix_user_email ON user (email);
+
+CREATE UNIQUE INDEX ix_user_username ON user (username);
+
+CREATE TABLE current_fund_price (
+    mf_id INTEGER NOT NULL, 
+    stocks_id INTEGER NOT NULL, 
+    PRIMARY KEY (mf_id, stocks_id), 
+    FOREIGN KEY(mf_id) REFERENCES mutual_funds (id), 
+    FOREIGN KEY(stocks_id) REFERENCES stocks (id)
+);
+
+CREATE TABLE portfolios (
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    name VARCHAR(64), 
+    dollars FLOAT NOT NULL, 
+    user_id INTEGER, 
+    PRIMARY KEY (id), 
+    FOREIGN KEY(user_id) REFERENCES user (id)
+);
+
+CREATE UNIQUE INDEX ix_portfolios_name ON portfolios (name);
+
+INSERT INTO alembic_version (version_num) VALUES ('8cf6354330ae');
+
+-- Running upgrade 8cf6354330ae -> 383a5cf88f13
+
+CREATE TABLE mutual_funds (
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    name VARCHAR(64), 
+    dollars FLOAT, 
+    total_mf_sector FLOAT, 
+    portfolio_id INTEGER, 
+    sid INTEGER, 
+    PRIMARY KEY (id), 
+    FOREIGN KEY(portfolio_id) REFERENCES portfolios (id), 
+    FOREIGN KEY(sid) REFERENCES stocks (id)
+);
+
+CREATE UNIQUE INDEX ix_mutual_funds_name ON mutual_funds (name);
+
+CREATE TABLE stocks (
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    ticker_symbol VARCHAR(32), 
+    legal_name VARCHAR(128), 
+    total_shares FLOAT, 
+    current_price FLOAT, 
+    mfid INTEGER, 
+    PRIMARY KEY (id), 
+    FOREIGN KEY(mfid) REFERENCES mutual_funds (id)
+);
+
+CREATE UNIQUE INDEX ix_stocks_legal_name ON stocks (legal_name);
+
+CREATE UNIQUE INDEX ix_stocks_ticker_symbol ON stocks (ticker_symbol);
+
+CREATE TABLE user (
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    username VARCHAR(64), 
+    email VARCHAR(120), 
+    password_hash VARCHAR(128), 
+    PRIMARY KEY (id)
+);
+
+CREATE UNIQUE INDEX ix_user_email ON user (email);
+
+CREATE UNIQUE INDEX ix_user_username ON user (username);
+
+CREATE TABLE current_fund_price (
+    mf_id INTEGER NOT NULL, 
+    stocks_id INTEGER NOT NULL, 
+    PRIMARY KEY (mf_id, stocks_id), 
+    FOREIGN KEY(mf_id) REFERENCES mutual_funds (id), 
+    FOREIGN KEY(stocks_id) REFERENCES stocks (id)
+);
+
+CREATE TABLE portfolios (
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    name VARCHAR(64), 
+    dollars FLOAT NOT NULL, 
+    user_id INTEGER, 
+    PRIMARY KEY (id), 
+    FOREIGN KEY(user_id) REFERENCES user (id)
+);
+
+CREATE UNIQUE INDEX ix_portfolios_name ON portfolios (name);
+
+UPDATE alembic_version SET version_num='383a5cf88f13' WHERE alembic_version.version_num = '8cf6354330ae';
+
+-- Running upgrade 383a5cf88f13 -> a0e31b44a81c
+
+CREATE TABLE mutual_funds (
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    name VARCHAR(64), 
+    dollars FLOAT, 
+    total_mf_sector FLOAT, 
+    portfolio_id INTEGER, 
+    sid INTEGER, 
+    PRIMARY KEY (id), 
+    FOREIGN KEY(portfolio_id) REFERENCES portfolios (id), 
+    FOREIGN KEY(sid) REFERENCES stocks (id)
+);
+
+CREATE UNIQUE INDEX ix_mutual_funds_name ON mutual_funds (name);
+
+CREATE TABLE stocks (
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    ticker_symbol VARCHAR(32), 
+    legal_name VARCHAR(128), 
+    total_shares FLOAT, 
+    current_price FLOAT, 
+    mfid INTEGER, 
+    PRIMARY KEY (id), 
+    FOREIGN KEY(mfid) REFERENCES mutual_funds (id)
+);
+
+CREATE UNIQUE INDEX ix_stocks_legal_name ON stocks (legal_name);
+
+CREATE UNIQUE INDEX ix_stocks_ticker_symbol ON stocks (ticker_symbol);
+
+CREATE TABLE user (
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    username VARCHAR(64), 
+    email VARCHAR(120), 
+    password_hash VARCHAR(128), 
+    PRIMARY KEY (id)
+);
+
+CREATE UNIQUE INDEX ix_user_email ON user (email);
+
+CREATE UNIQUE INDEX ix_user_username ON user (username);
+
+CREATE TABLE current_fund_price (
+    mf_id INTEGER NOT NULL, 
+    stocks_id INTEGER NOT NULL, 
+    PRIMARY KEY (mf_id, stocks_id), 
+    FOREIGN KEY(mf_id) REFERENCES mutual_funds (id), 
+    FOREIGN KEY(stocks_id) REFERENCES stocks (id)
+);
+
+CREATE TABLE portfolios (
+    id INTEGER NOT NULL AUTO_INCREMENT, 
+    name VARCHAR(64), 
+    dollars FLOAT NOT NULL, 
+    user_id INTEGER, 
+    PRIMARY KEY (id), 
+    FOREIGN KEY(user_id) REFERENCES user (id)
+);
+
+CREATE UNIQUE INDEX ix_portfolios_name ON portfolios (name);
+
+UPDATE alembic_version SET version_num='a0e31b44a81c' WHERE alembic_version.version_num = '383a5cf88f13';
+

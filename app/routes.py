@@ -190,7 +190,7 @@ def viewMutualFunds(id):
 @app.route('/addHoldings/<int:id>', methods=['GET', 'POST'])
 def addHoldings(id):
     # id = mfund id
-    results = Stocks.query.all()#filter_by(mf_rel=None)
+    results = Stocks.query.all()
     return render_template('addtoHoldings.html', title="Add a Mutual Fund to a Portfolio", results=results, data=True, pid=id)
 
 @app.route('/addtoHoldings/<int:id>/<int:pid>', methods=['GET', 'POST'])
@@ -208,9 +208,8 @@ def addtoHoldings(id,pid):
     flash("Stock Added!")
     add_form = AddPortfoliosForm()
     results = Mutual_Funds.query.filter_by(id=pid)
-    Mresults = Stocks.query.filter_by(mfid = id)
     # return redirect(url_for('view_stocks'))
-    return render_template('addtoHoldings.html', title="Add a Mutual Fund to a Portfolio", results=results, Mresults=Mresults,  data=True, pid=id)
+    return render_template('mutualFunds.html', title="Mutual Funds", results=results, data=True)
 
 @app.route('/viewHoldings/<int:id>', methods=['GET'])
 def viewHoldings(id):
