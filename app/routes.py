@@ -1,5 +1,5 @@
-import re
-from flask import render_template, flash, redirect, url_for, request,json
+
+from flask import render_template, flash, redirect, url_for,json, Markup, request
 from flask_login import current_user
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import Query,query
@@ -277,3 +277,47 @@ def render_query(statement, db_session):
             return super(LiteralCompiler, self).render_literal_value(value, type_)
 
     return LiteralCompiler(dialect, statement).process(statement)
+
+@app.route('/graphSectors', methods=['GET','POST'])
+def graphSectors():
+    labels = [
+        'JAN', 'FEB', 'MAR', 'APR',
+        'MAY', 'JUN', 'JUL', 'AUG',
+        'SEP', 'OCT', 'NOV', 'DEC']
+    values = [
+        967.67, 1190.89, 1079.75, 1349.19,
+        2328.91, 2504.28, 2873.83, 4764.87,
+        4349.29, 6458.30, 9907, 16297]
+    colors = [
+    "#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA",
+    "#ABCDEF", "#DDDDDD", "#ABCABC", "#4169E1",
+    "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"]
+    pie_values = values
+    pie_labels = labels
+    return render_template('graphSectors.html', title='Mutual Fund Sector Breakdown', max=17000, set=zip(values, labels, colors))
+
+
+
+@app.route('/sectors' ,methods=['GET','POST'])
+def sectors():
+    results = Stocks.query.all()
+    form = AddStocksForm()
+    if form.validate_on_submit():
+        new_stock = Stocks(ticker_symbol=form.ticker_symbol.data, legal_name=form.legal_name.data, total_shares=form.total_shares.data, current_price=form.current_price.data)
+        db.session.add(new_stock)
+        db.session.commit()
+        flash("Congratulations, you added a Stock!")
+        return redirect(url_for('sectors'))
+    return render_template('sectors.html', title='Sectors', results=results, form=form, grow=True, data=True)
+
+@app.route('/currentFundPrice' ,methods=['GET','POST'])
+def currentFundPrice():
+    results = Stocks.query.all()
+    form = AddStocksForm()
+    if form.validate_on_submit():
+        new_stock = Stocks(ticker_symbol=form.ticker_symbol.data, legal_name=form.legal_name.data, total_shares=form.total_shares.data, current_price=form.current_price.data)
+        db.session.add(new_stock)
+        db.session.commit()
+        flash("Congratulations, you added a Stock!")
+        return redirect(url_for('currentFundPrice'))
+    return render_template('currentFundPrice.html', title='Currrent Fund Price', results=results, form=form, grow=True, data=True)

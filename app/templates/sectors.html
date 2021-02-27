@@ -2,30 +2,15 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
-
-<div class="container">
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-info" role="alert">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
-    {% endwith %}
-
-    {# application content needs to be provided in the app_content block #}
-    {% block app_content %}{% endblock %}
-</div>
-
 <div class="table-responsive" >
 <table class="table">
     <thead>
         <tr>
             <th>  id  </th>
-            <th>  ticker_symbol  </th>
+            <th>  name  </th>
             <th>  legal_name  </th>
             <th>  total_shares  </th>
             <th>  current_price  </th>
-            <th>  Sector  </th>
             <th>  Edit/Delete  </th>
         </tr>
     </thead>
@@ -38,7 +23,6 @@
                 <td>{{  row.legal_name  }}</td>
                 <td>{{  row.total_shares  }}</td>
                 <td>${{  row.current_price  }}</td>
-                <td>{{  'Sector Name'  }}</td>
                 <td> 
                     <a href="{{url_for('editStocks', id=row.id)}}">
                         <button type="button">  Edit  </button></a>
@@ -60,5 +44,4 @@
     </div>
 </div>
 {% endif %}
-
 {% endblock %}

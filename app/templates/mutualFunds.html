@@ -27,6 +27,7 @@
             <th>  portfolio id  </th>
             <th>  Edit/Delete  </th>
             <th>  Stocks  </th>
+            <th>  Current Fund Price  </th>
         </tr>
     </thead>
     <tbody>
@@ -49,6 +50,10 @@
                         <button type="button">View</button></a>
                     <a href="{{url_for('addHoldings', id=row.id)}}">
                         <button type="button">Add</button></a>
+                </td>
+                <td>  
+                    <a href="{{url_for('currentFundPrice', id=row.id)}}">
+                        <button type="button">CFP</button></a>
                 </td>
             </tr>
         {% endfor %}
