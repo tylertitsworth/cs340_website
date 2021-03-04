@@ -22,7 +22,8 @@
         <tr>
             <th>  ID  </th>
             <th>  name  </th>
-            <th>  dollars  </th>
+            <th>  initial_dollars  </th>
+            <th>  dollars_invested_port</th>
             <th>  Mutual Funds  </th>
             <th>  Edit/Delete  </th>
         </tr>
@@ -33,7 +34,8 @@
             <tr>
                 <td>{{  row.id  }}</td>
                 <td>{{  row.name  }}</td>
-                <td>${{  row.dollars  }}</td>
+                <td>${{  row.initial_dollars  }}</td>
+                <td>${{  row.dollars_invested_port  }}</td>
                 <td>
                     <a href="{{url_for('viewMutualFunds', id=row.id)}}">
                         <button type="button">View</button></a>

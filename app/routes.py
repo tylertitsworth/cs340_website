@@ -3,11 +3,12 @@ from flask import render_template, flash, redirect, url_for,json, Markup, reques
 from flask_login import current_user
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import Query,query
-from sqlalchemy.sql import text 
+from sqlalchemy.sql import text
+from sqlalchemy.sql.expression import true 
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm, AddPortfoliosForm
 from flask_login import login_required, current_user, login_user, logout_user
-from app.models import User, Mutual_Funds, Stocks, Portfolios,current_fund_price
+from app.models import User, Mutual_Funds, Stocks, Portfolios,current_fund_price, Holdings,Sectors
 from werkzeug.urls import url_parse
 from datetime import date, datetime, timedelta
 
@@ -24,7 +25,7 @@ def index():
     results = Portfolios.query.filter_by(user_id = current_user.get_id())
     add_form = AddPortfoliosForm()
     if add_form.validate_on_submit():
-        portfolio = Portfolios(name=add_form.name.data, dollars=add_form.dollars.data, user_id=current_user.get_id())
+        portfolio = Portfolios(name=add_form.name.data, initial_dollars=add_form.dollars.data, user_id=current_user.get_id())
         db.session.add(portfolio)
         db.session.commit()
         flash("Congratulations, you added a Portfolio")
@@ -93,12 +94,25 @@ def register():
 def edit_profile():
     form = EditProfileForm(current_user.username)
 
+@app.route('/admin',methods=['GET', 'POST'])
+def admin():
+    user_results = User.query.all()
+    port_results = Portfolios.query.all()
+    hold_results = Holdings.query.all()
+    mf_results = Mutual_Funds.query.all()
+    cfp_results = current_fund_price.query.all()
+    stonk_results = Stocks.query.all()
+    return render_template('admin.html',title='Admin',user_results=user_results,
+    port_results = port_results, hold_results = hold_results,mf_results = mf_results,
+    cfp_results = cfp_results, stonk_results =  stonk_results, user_data = True, port_data = True,
+    hold_data = True, mf_data = True, cfp_data = True, stonk_data = True, sector_data = True)
+
 @app.route('/mutualFunds',methods=['GET', 'POST'])
 def mutualFunds():
     results = Mutual_Funds.query.all()
     add_form = AddMutualFundsForm()
     if add_form.validate_on_submit():
-        mutual_fund = Mutual_Funds(name=add_form.name.data, dollars=add_form.dollars.data, total_mf_sector=add_form.total_mf_sector.data)
+        mutual_fund = Mutual_Funds(name=add_form.name.data, initial_investment_amt=add_form.dollars.data, total_mf_sector=add_form.total_mf_sector.data)
         db.session.add(mutual_fund)
         db.session.commit()
         flash("Congratulations, you added a Mutual Fund")
@@ -126,7 +140,7 @@ def editMutualFunds(id):
         return redirect(url_for('mutualFunds'))
     return render_template('editMutualFunds.html', title="Edit Funds",results=results.name,form=form,fund=True)
 
-@app.route('/stocks',methods=['GET', 'POST'])
+@app.route('/stocks',methods=['GET', 'POST']) 
 def view_stocks():
     results = Stocks.query.all()
     form = AddStocksForm()
@@ -283,7 +297,7 @@ def graphSectors():
     labels = [
         'JAN', 'FEB', 'MAR', 'APR',
         'MAY', 'JUN', 'JUL', 'AUG',
-        'SEP', 'OCT', 'NOV', 'DEC']
+        'SEP', 'OCT', 'NOV', 'Communications']
     values = [
         967.67, 1190.89, 1079.75, 1349.19,
         2328.91, 2504.28, 2873.83, 4764.87,
@@ -321,3 +335,11 @@ def currentFundPrice():
         flash("Congratulations, you added a Stock!")
         return redirect(url_for('currentFundPrice'))
     return render_template('currentFundPrice.html', title='Currrent Fund Price', results=results, form=form, grow=True, data=True)
+
+@app.route('/editUser' ,methods=['GET','POST'])
+def editUser():
+    return redirect(url_for('login'))
+
+@app.route('/deleteUser' ,methods=['GET','POST'])
+def deleteUser():
+    return redirect(url_for('login'))
