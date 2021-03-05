@@ -47,19 +47,36 @@ class EditProfileForm(FlaskForm):
 
 class AddPortfoliosForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
-    dollars = FloatField('dollars', validators=[DataRequired()], default="1000")
+    initial_dollars = FloatField('initial_dollars', validators=[DataRequired()], default="1000")
+    dollars_invested_port = FloatField('dollars_invested_port', validators=[DataRequired()], default="1000")
     submit = SubmitField('Submit')
 
 class AddMutualFundsForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
-    dollars = FloatField('dollars',validators=[DataRequired()])
+    initial_investment_amt = FloatField('initial_investment_amt',validators=[DataRequired()])
+    dollars_available = FloatField('dollars_available',validators=[DataRequired()])
+    dollars_invested = FloatField('dollars_invested',validators=[DataRequired()])
+    mf_share_price = FloatField('mf_share_price',validators=[DataRequired()])
     total_mf_sector = FloatField('total_mf_sector',validators=[DataRequired()])
     submit = SubmitField('Submit')
     
 class AddStocksForm(FlaskForm):
     ticker_symbol = StringField('ticker_symbol', validators=[DataRequired()])
     legal_name = StringField('legal_name', validators=[DataRequired()])
-    total_shares = FloatField('total_shares',validators=[DataRequired()])
+    total_shares_circulation = FloatField('total_shares_circulation',validators=[DataRequired()]) 
+    total_shares_available = FloatField('total_shares_available',validators=[DataRequired()])
+    initial_price = FloatField('initial_price',validators=[DataRequired()]) 
     current_price = FloatField('current_price',validators=[DataRequired()]) 
     submit = SubmitField('Submit')
 
+class AddSectorForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+# class AddHoldingsForm(FlaskForm):
+#     port_id_hold = 
+#     mf_id_hold =
+#     amount_invested = 
+#     total_shares_invested =  
+#     initial_share_price  =
+#     current_share_price =
