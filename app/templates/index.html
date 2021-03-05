@@ -62,19 +62,24 @@
             <tr>
                 <th>  ID  </th>
                 <th>  name  </th>
-                <th>  dollars  </th>
+                <th>  initial_investment_amt  </th>
+                <th>  dollars_available  </th>
+                <th>  dollars_invested  </th>
+                <th>  mf_share_price  </th>
                 <th>  total_mf_sector  </th>
             </tr>
         </thead>
         <tbody>
             {% if data %} 
-            {% for row in Mresults %}
+            {% for mf_row in Mresults %}
                 <tr>
-                    <td>{{  row.id  }}</td>
-                    <td>{{  row.name  }}</td>
-                    <td>${{  row.dollars  }}</td>
-                    <td>{{  row.total_mf_sector  }}%</td>
-
+                    <td>{{  mf_row.id  }}</td>
+                    <td>{{  mf_row.name  }}</td>
+                    <td>${{  mf_row.initial_investment_amt  }}</td>
+                    <td>${{  mf_row.dollars_available  }}</td>
+                    <td>${{  mf_row.dollars_invested  }}</td>
+                    <td>${{  mf_row.mf_share_price  }}</td>
+                    <td>{{  mf_row.total_mf_sector  }}%</td>
                 </tr>
             {% endfor %}
             {% endif %}

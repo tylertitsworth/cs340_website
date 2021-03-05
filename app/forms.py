@@ -47,7 +47,8 @@ class EditProfileForm(FlaskForm):
 
 class AddPortfoliosForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
-    dollars = FloatField('dollars', validators=[DataRequired()], default="1000")
+    initial_dollars = FloatField('initial_dollars', validators=[DataRequired()], default="1000")
+    dollars_invested_port = FloatField('dollars_invested_port', validators=[DataRequired()], default="1000")
     submit = SubmitField('Submit')
 
 class AddMutualFundsForm(FlaskForm):

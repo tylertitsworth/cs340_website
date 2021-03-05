@@ -25,7 +25,7 @@ def index():
     results = Portfolios.query.filter_by(user_id = current_user.get_id())
     add_form = AddPortfoliosForm()
     if add_form.validate_on_submit():
-        portfolio = Portfolios(name=add_form.name.data, initial_dollars=add_form.dollars.data, user_id=current_user.get_id())
+        portfolio = Portfolios(name=add_form.name.data, initial_dollars=add_form.initial_dollars.data, dollars_invested_port=add_form.dollars_invested_port.data, user_id=current_user.get_id())
         db.session.add(portfolio)
         db.session.commit()
         flash("Congratulations, you added a Portfolio")
@@ -177,7 +177,7 @@ def deleteStocks(id):
 @app.route('/addMutualFundtoPortfolio/<int:id>', methods=['GET', 'POST'])
 def addMutualFundtoPortfolio(id):
     # id = portfolio id
-    results = Mutual_Funds.query.filter_by(portfolio_id=None)
+    results = Mutual_Funds.query.all()
     return render_template('addMutualFund.html', title="Add a Mutual Fund to a Portfolio", results=results, data=True, pid=id)
 
 @app.route('/addMutualFund/<int:id>/<int:pid>', methods=['GET', 'POST', 'PATCH'])
