@@ -23,22 +23,28 @@
             <th>  id  </th>
             <th>  ticker_symbol  </th>
             <th>  legal_name  </th>
-            <th>  total_shares  </th>
+            <th>  total_shares_circulation  </th>
+            <th>  total_shares_available  </th>
+            <th>  initial_price  </th>
             <th>  current_price  </th>
+            <th>  Sector  </th>
             <th>  Add to Mutual Fund  </th>
         </tr>
     </thead>
     <tbody>
         {% if data %} 
-        {% for row in results %}
+        {% for s_row in results %}
             <tr>
-                <td>{{  row.id  }}</td>
-                <td>{{  row.ticker_symbol  }}</td>
-                <td>{{  row.legal_name  }}</td>
-                <td>{{  row.total_shares  }}</td>
-                <td>${{  row.current_price  }}</td>
+                <td>{{  s_row.id  }}</td>
+                <td>{{  s_row.ticker_symbol  }}</td>
+                <td>{{  s_row.legal_name  }}</td>
+                <td>{{  s_row.total_shares_circulation  }}</td>
+                <td>{{  s_row.total_shares_available  }}</td>
+                <td>{{  s_row.initial_price  }}</td>
+                <td>${{ s_row.current_price  }}</td>
+                <td>{{  s_row.sector_id  }}</td>
                 <td>
-                    <a href="{{url_for('addtoHoldings', id=row.id, pid=pid)}}">
+                    <a href="{{url_for('addtoHoldings', id=s_row.id, pid=pid)}}">
                         <button type="button">  Add  </button></a>
                 </td>
             </tr>

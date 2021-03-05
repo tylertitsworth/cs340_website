@@ -6,7 +6,7 @@ from sqlalchemy.orm import Query,query
 from sqlalchemy.sql import text
 from sqlalchemy.sql.expression import true 
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm, AddPortfoliosForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm, AddPortfoliosForm,AddSectorForm
 from flask_login import login_required, current_user, login_user, logout_user
 from app.models import User, Mutual_Funds, Stocks, Portfolios,current_fund_price, Holdings,Sectors
 from werkzeug.urls import url_parse
@@ -102,22 +102,23 @@ def admin():
     mf_results = Mutual_Funds.query.all()
     cfp_results = current_fund_price.query.all()
     stonk_results = Stocks.query.all()
+    sector_results = Sectors.query.all()
     return render_template('admin.html',title='Admin',user_results=user_results,
     port_results = port_results, hold_results = hold_results,mf_results = mf_results,
-    cfp_results = cfp_results, stonk_results =  stonk_results, user_data = True, port_data = True,
+    cfp_results = cfp_results, stonk_results =  stonk_results,sector_results=sector_results, user_data = True, port_data = True,
     hold_data = True, mf_data = True, cfp_data = True, stonk_data = True, sector_data = True)
 
 @app.route('/mutualFunds',methods=['GET', 'POST'])
 def mutualFunds():
-    results = Mutual_Funds.query.all()
+    mf_results = Mutual_Funds.query.all()
     add_form = AddMutualFundsForm()
     if add_form.validate_on_submit():
-        mutual_fund = Mutual_Funds(name=add_form.name.data, initial_investment_amt=add_form.dollars.data, total_mf_sector=add_form.total_mf_sector.data)
+        mutual_fund = Mutual_Funds(name=add_form.name.data, initial_investment_amt=add_form.initial_investment_amt.data, dollars_available= add_form.dollars_available.data, dollars_invested=add_form.dollars_invested.data,  mf_share_price = add_form.mf_share_price.data, total_mf_sector=add_form.total_mf_sector.data)
         db.session.add(mutual_fund)
         db.session.commit()
         flash("Congratulations, you added a Mutual Fund")
         return redirect(url_for('mutualFunds'))
-    return render_template('mutualFunds.html',title='Mutual Funds', results=results, add_form=add_form,grow=True, data=True)
+    return render_template('mutualFunds.html',title='Mutual Funds', mf_results=mf_results, add_form=add_form,grow=True, data=True)
 
 @app.route('/deleteMutualFunds/<int:id>',methods=['GET', 'POST'])
 def deleteMutualFunds(id):
@@ -142,15 +143,15 @@ def editMutualFunds(id):
 
 @app.route('/stocks',methods=['GET', 'POST']) 
 def view_stocks():
-    results = Stocks.query.all()
+    stonk_results = Stocks.query.all()
     form = AddStocksForm()
     if form.validate_on_submit():
-        new_stock = Stocks(ticker_symbol=form.ticker_symbol.data, legal_name=form.legal_name.data, total_shares=form.total_shares.data, current_price=form.current_price.data)
+        new_stock = Stocks(ticker_symbol=form.ticker_symbol.data, legal_name=form.legal_name.data, total_shares_circulation=form.total_shares.data, current_price=form.current_price.data)
         db.session.add(new_stock)
         db.session.commit()
         flash("Congratulations, you added a Stock!")
         return redirect(url_for('view_stocks'))
-    return render_template('stocks.html', title='Stocks', results=results, form=form, grow=True, data=True)
+    return render_template('stocks.html', title='Stocks', stonk_results=stonk_results, form=form, grow=True, stonk_data=True)
 
 @app.route('/editStocks/<int:id>',methods=['GET', 'POST'])
 def editStocks(id):
@@ -314,15 +315,15 @@ def graphSectors():
 
 @app.route('/sectors' ,methods=['GET','POST'])
 def sectors():
-    results = Stocks.query.all()
-    form = AddStocksForm()
+    sector_results = Sectors.query.all()
+    form = AddSectorForm()
     if form.validate_on_submit():
-        new_stock = Stocks(ticker_symbol=form.ticker_symbol.data, legal_name=form.legal_name.data, total_shares=form.total_shares.data, current_price=form.current_price.data)
-        db.session.add(new_stock)
+        new_sector = Sectors(name=form.name.data)
+        db.session.add(new_sector)
         db.session.commit()
-        flash("Congratulations, you added a Stock!")
+        flash("Congratulations, you added a Sector!")
         return redirect(url_for('sectors'))
-    return render_template('sectors.html', title='Sectors', results=results, form=form, grow=True, data=True)
+    return render_template('sectors.html', title='Sectors', sector_results=sector_results, form=form, grow=True, sector_data=True)
 
 @app.route('/currentFundPrice' ,methods=['GET','POST'])
 def currentFundPrice():
@@ -343,3 +344,14 @@ def editUser():
 @app.route('/deleteUser' ,methods=['GET','POST'])
 def deleteUser():
     return redirect(url_for('login'))
+
+@app.route('/viewPortfolioHoldings' ,methods=['GET','POST'])
+def viewPortfolioHoldings():
+    hold_results = Holdings.query.all()
+    form = AddStocksForm()
+    if form.validate_on_submit():
+        new_stock = Stocks(ticker_symbol=form.ticker_symbol.data, legal_name=form.legal_name.data, total_shares_circulation=form.total_shares.data, current_price=form.current_price.data)
+        db.session.add(new_stock)
+        db.session.commit()
+        flash("Congratulations, you added a Stock!")
+    return render_template('viewPortfolioHoldings.html', title='Portfolio Holdings',hold_results=hold_results, hold_data=True)

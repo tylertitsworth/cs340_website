@@ -8,6 +8,7 @@
 <div class="table-responsive" >
     <table class="table">
         <thead>
+            <caption>  Users  </caption>
             <tr>
                 <th>  id  </th>
                 <th>  username  </th>
@@ -41,14 +42,16 @@
 <div class="table-responsive" >
     <table class="table">
         <thead>
+            <caption>  Portfolios  </caption>
             <tr>
                 <th>  id  </th>
                 <th>  name  </th>
                 <th>  initial_dollars  </th>
                 <th>  dollars_invested_port  </th>
                 <th>  user_id  </th>
-                <th> Mutual Funds </th>
-                <th>  Edit/Delete  </th>
+                <!-- <th> Mutual Funds </th> -->
+                <th>  Edit/Delete  Mutual Funds</th>
+                <th>  Edit/Delete  Portfolio</th>
             </tr>
         </thead>
         <tbody> 
@@ -59,8 +62,8 @@
                     <td>{{  port_row.name  }}</td>
                     <td>${{  port_row.initial_dollars  }}</td>
                     <td>${{  port_row.dollars_invested_port  }}</td>
-                    <td>${{  port_row.user_id  }}</td>
-                    <td>${{  port_row.mf_port_rel  }}</td>
+                    <td>{{  port_row.user_id  }}</td>
+                    <!-- <td>{{  port_row.mf_port_rel  }}</td> -->
                     <td>
                         <a href="{{url_for('viewMutualFunds', id=port_row.id)}}">
                             <button type="button">View</button></a>
@@ -85,6 +88,7 @@
 <div class="table-responsive" >
     <table class="table">
         <thead>
+            <caption> Holdings </caption>
             <tr>
                 <th>  id  </th>
                 <th>  port_id_hold  </th>
@@ -125,9 +129,11 @@
 <div class="table-responsive" >
     <table class="table">
         <thead>
+            <caption>  Mutual Funds  </caption>
             <tr>
                 <th>  ID  </th>
                 <th>  name  </th>
+                <th>  initial_investment_amt  </th>
                 <th>  dollars_available  </th>
                 <th>  dollars_invested  </th>
                 <th>  mf_share_price  </th>
@@ -136,7 +142,6 @@
                 <th>  Edit/Delete  </th> 
                 <th>  Stocks  </th>
                 <th>  Current Fund Price  </th>
-               
             </tr>
         </thead>
         <tbody>
@@ -180,6 +185,7 @@
 <div class="table-responsive" >
     <table class="table">
         <thead>
+            <caption>  Current_Fund_Price  </caption>
             <tr>
                 <th>  id  </th>
                 <th>  mf_id  </th>
@@ -216,11 +222,14 @@
 <div class="table-responsive" >
     <table class="table">
         <thead>
+            <caption>  Stocks  </caption>
             <tr>
                 <th>  id  </th>
                 <th>  ticker_symbol  </th>
                 <th>  legal_name  </th>
-                <th>  total_shares  </th>
+                <th>  total_shares_circulation  </th>
+                <th>  total_shares_available  </th>
+                <th>  initial_price  </th>
                 <th>  current_price  </th>
                 <th>  Sector  </th>
                 <th>  Edit/Delete  </th>
@@ -258,6 +267,7 @@
 <div class="table-responsive" >
     <table class="table">
         <thead>
+            <caption>  Sectors  </caption>
             <tr>
                 <th>  id  </th>
                 <th>  name  </th>
