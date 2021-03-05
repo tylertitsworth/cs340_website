@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+<div class="table-responsive" >
+    <table class="table">
+        <thead>
+            <tr>
+                <th>  id  </th>
+                <th>  name  </th>
+                <th>  Edit/Delete  </th>
+            </tr>
+        </thead>
+        <tbody> 
+            {% if sector_data%}
+            {% for sect_row in sector_results %}
+                <tr>
+                    <td>{{  sect_row.id  }}</td>
+                    <td>{{  sect_row.name  }}</td>
+                    <td> 
+                        <a href="{{url_for('editStocks', id=sect_row.id)}}">
+                            <button type="button">  Edit  </button></a>
+                        <a href="{{url_for('deleteStocks', id=sect_row.id)}}">
+                            <button type="button">  Delete  </button></a>
+                    </td>
+                    
+                </tr>
+            {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+    </div>
+
+{% if grow%}
+<h3>Add Sector</h3>
+<div class="row">
+    <div class="col-md-4">
+        {{ wtf.quick_form(form) }}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

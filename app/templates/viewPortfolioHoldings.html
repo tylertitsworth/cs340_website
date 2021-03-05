@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+
+{% block app_content %}
+
+<div class="table-responsive" >
+    <table class="table">
+        <thead>
+            <tr>
+                <th>  id  </th>
+                <th>  port_id_hold  </th>
+                <th>  mf_id_hold  </th>
+                <th>  amount_invested  </th>
+                <th>  total_shares_invested  </th>
+                <th>  initial_share_price  </th>
+                <th>  current_share_price  </th>
+                <th>  Edit/Delete  </th>
+            </tr>
+        </thead>
+        <tbody> 
+            {% if hold_data%}
+            {% for holds in hold_results %}
+                <tr>
+                    <td>{{  holds.id  }}</td>
+                    <td>{{  holds.port_id_hold  }}</td>
+                    <td>{{  holds.mf_id_hold }}</td>
+                    <td>{{  holds.amount_invested  }}</td>
+                    <td>{{  holds.total_shares_invested  }}</td>
+                    <td>{{  holds.initial_share_price  }}</td>
+                    <td>{{  holds.current_share_price  }}</td>
+                    <td> 
+                        <a href="{{url_for('editUser', id=holds.id)}}">
+                            <button type="button">  Edit  </button></a>
+                        <a href="{{url_for('deleteUser', id=holds.id)}}">
+                            <button type="button">  Delete  </button></a>
+                    </td>    
+                </tr>
+            {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+    </div>
+
+{% endblock %}
