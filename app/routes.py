@@ -6,7 +6,7 @@ from sqlalchemy.orm import Query,query
 from sqlalchemy.sql import text
 from sqlalchemy.sql.expression import true 
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm, AddPortfoliosForm,AddSectorForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm, AddPortfoliosForm,AddSectorForm, SearchUsersForm
 from flask_login import login_required, current_user, login_user, logout_user
 from app.models import User, Mutual_Funds, Stocks, Portfolios,current_fund_price, Holdings,Sectors
 from werkzeug.urls import url_parse
@@ -103,10 +103,14 @@ def admin():
     cfp_results = current_fund_price.query.all()
     stonk_results = Stocks.query.all()
     sector_results = Sectors.query.all()
+
+    form = SearchUsersForm()
+    if form.validate_on_submit():
+        user_results = User.query.filter_by(username=form.username.data)
     return render_template('admin.html',title='Admin',user_results=user_results,
     port_results = port_results, hold_results = hold_results,mf_results = mf_results,
     cfp_results = cfp_results, stonk_results =  stonk_results,sector_results=sector_results, user_data = True, port_data = True,
-    hold_data = True, mf_data = True, cfp_data = True, stonk_data = True, sector_data = True)
+    hold_data = True, mf_data = True, cfp_data = True, stonk_data = True, sector_data = True, form=form)
 
 @app.route('/mutualFunds',methods=['GET', 'POST'])
 def mutualFunds():

@@ -73,6 +73,10 @@ class AddSectorForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+class SearchUsersForm(FlaskForm):
+    username = StringField('username')
+    submit = SubmitField('Submit')
+
 # class AddHoldingsForm(FlaskForm):
 #     port_id_hold = 
 #     mf_id_hold =
