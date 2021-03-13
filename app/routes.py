@@ -299,22 +299,7 @@ def render_query(statement, db_session):
 
 @app.route('/graphSectors', methods=['GET','POST'])
 def graphSectors():
-    labels = [
-        'JAN', 'FEB', 'MAR', 'APR',
-        'MAY', 'JUN', 'JUL', 'AUG',
-        'SEP', 'OCT', 'NOV', 'Communications']
-    values = [
-        967.67, 1190.89, 1079.75, 1349.19,
-        2328.91, 2504.28, 2873.83, 4764.87,
-        4349.29, 6458.30, 9907, 16297]
-    colors = [
-    "#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA",
-    "#ABCDEF", "#DDDDDD", "#ABCABC", "#4169E1",
-    "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"]
-    pie_values = values
-    pie_labels = labels
-    return render_template('graphSectors.html', title='Mutual Fund Sector Breakdown', max=17000, set=zip(values, labels, colors))
-
+    return render_template('graphSectors.html', title='Mutual Fund Sector Breakdown')
 
 
 @app.route('/sectors' ,methods=['GET','POST'])

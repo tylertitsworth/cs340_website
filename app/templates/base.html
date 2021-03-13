@@ -1,4 +1,31 @@
 {% extends 'bootstrap/base.html' %}
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['Work',     11],
+          ['Eat',      2],
+          ['Commute',  2],
+          ['Watch TV', 2],
+          ['Sleep',    7]
+        ]);
+
+        var options = {
+          title: 'My Daily Activities'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
 {% block title %}
     {% if title %}{{ title }} - CS340{% else %}Welcome to App{% endif %}
 {% endblock %}
@@ -22,7 +49,7 @@
                     <li><a href="{{ url_for('sectors') }}">{{ ('Sectors') }}</a></li>
                     <li><a href="{{ url_for('admin') }}">{{ ('Admin') }}</a></li>
                     <li><a href="{{ url_for('viewPortfolioHoldings') }}">{{ ('Portfolio Holdings') }}</a></li>
-                    <!-- <li><a href="{{ url_for('graphSectors') }}">{{ ('graphSectors') }}</a></li> -->
+                    <li><a href="{{ url_for('graphSectors') }}">{{ ('graphSectors') }}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}
