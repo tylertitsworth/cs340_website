@@ -30,13 +30,11 @@ class Portfolios(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(64), index=True, unique=True)
     # Check initial_dollars - dollars_invested >= 0 
-    initial_dollars = db.Column(db.Float, nullable=False, default="1000.0")
-    dollars_invested_port = db.Column(db.Float, nullable=True)
-
+    initial_investment_amt = db.Column(db.Float, nullable=False, default="1000.0")
+    dollars_available = db.Column(db.Float, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     # mutual_fund = db.relationship('Mutual_Funds',backref='portfolios', lazy='dynamic')
     mf_port_rel = db.relationship("Mutual_Funds", secondary = 'holdings')
-    
     
     def __repr__(self):
         return '<Portfolios {}>'.format(self.id)
@@ -48,13 +46,12 @@ class Holdings(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     port_id_hold = db.Column(db.Integer, db.ForeignKey('portfolios.id'),primary_key=True)
     mf_id_hold = db.Column(db.Integer, db.ForeignKey('mutual_funds.id'),primary_key=True)
-    
-    # Upgrade Portfolios.dollars_invested by the amount_invested and Upgradee MutuaL Funds dollars available
-    amount_invested = db.Column(db.Float, nullable=False)
-    total_shares_invested = db.Column(db.Float, nullable=False)
-    initial_share_price = db.Column(db.Float, nullable=False) 
+    # number of shares for this transaction
+    mf_shares = db.Column(db.Float, nullable=True)
+    # nav at the transaction
+    mf_nav = db.Column(db.Float, nullable=True)
 
-    current_share_price = db.Column(db.Float, nullable=False) 
+    port_amount_invested = db.Column(db.Float, nullable=False)
     mfund_hold_rel =  db.relationship('Mutual_Funds',backref=backref('Holdings',cascade="all,delete-orphan"))
     port_hold_rel = db.relationship('Portfolios',backref=backref('Holdings',cascade="all,delete-orphan"))
     def __repr__(self):
@@ -68,11 +65,12 @@ class Mutual_Funds(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
     initial_investment_amt = db.Column(db.Float, nullable=False)
-    # increased by Holdings transaction
+    # Net Asset Value(nav) == nav = dollars_available  + sumproduct (stocks shares * stock shares price) 
+    nav = db.Column(db.Float, nullable=True)
+    shares_outstanding = db.Column(db.Float, nullable=True)
     dollars_available = db.Column(db.Float, nullable=True)
     dollars_invested = db.Column(db.Float, nullable=True)
-     
-    mf_share_price = db.Column(db.Float, nullable=True) 
+    
     total_mf_sector = db.Column(db.Float, nullable=False)
     portfolio_id = db.Column(db.Integer, db.ForeignKey('portfolios.id'))
     sids = db.Column(db.Integer, db.ForeignKey('stocks.id'))
@@ -91,7 +89,8 @@ class current_fund_price(db.Model):
    # the transcaction value of num_shares and price_per_share is the total
    #  transaction amt and would reduce the dollars available with the  associatied with the mfid
    # upgrade the stocks total shares avaible - cfp.num_shares
-   num_shares = db.Column(db.Float)
+   total_shares = db.Column(db.Float)
+   # at time of transaction
    price_per_share = db.Column(db.Float)
    stock = db.relationship('Stocks',backref=backref('current_fund_price',cascade="all,delete-orphan"))
    mfund = db.relationship('Mutual_Funds',backref=backref('current_fund_price',cascade="all,delete-orphan"))
@@ -103,15 +102,13 @@ class Stocks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ticker_symbol = db.Column(db.String(32), index=True, unique=True)
     legal_name = db.Column(db.String(128), index=True, unique=True)
-    total_shares_circulation = db.Column(db.Float)
-    total_shares_available =  db.Column(db.Float)
-    initial_price = db.Column(db.Float)
-    current_price = db.Column(db.Float)
+    current_share_price = db.Column(db.Float, nullable=True)
+    total_number_shares = db.Column(db.Float)
+    shares_avail =  db.Column(db.Float)
+    initial_offering_price = db.Column(db.Float)
     sector_id = db.Column(db.Integer, db.ForeignKey('sectors.id'))
     mf_rel = db.relationship('Mutual_Funds',secondary="current_fund_price")
-
-
-
+    
     def __repr__(self):
         return '<Stocks {}>'.format(self.id)
         
