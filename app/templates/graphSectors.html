@@ -1,38 +1,28 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>{{ title }}</title>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
-</head>
-
-<body>
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
 {% block content %}
-    <h1>{{ title }}</h1>
-    <canvas id="chart" width="600" height="400"></canvas>
-    <script>
-      var pieData = [
-        {% for item, label, colors in set %}
-          {
-            value: {{item}},
-            label: "{{  label }}",
-            color: "{{  colors  }}"
-          },
-        {% endfor %}
-      ];
-
-      // get bar chart canvas
-      var mychart = document.getElementById("chart").getContext("2d");
-      steps = 10
-      max = {{ max }}
-
-      // draw pie chart
-      new Chart(document.getElementById("chart").getContext("2d")).Pie(pieData);
-    </script>
-    
-    {% endblock %}
+<head>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Task', 'Hours per Day'],
+        ['Work',     11],
+        ['Eat',      2],
+        ['Commute',  2],
+        ['Watch TV', 2],
+        ['Sleep',    7]
+      ]);
+      var options = {
+        title: 'My Daily Activities'
+      };
+      var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+      chart.draw(data, options);
+    }
+  </script>
+</head>
+<body>
+  <div id="piechart" style="width: 900px; height: 500px;"></div>
 </body>
-</html>
+{% endblock %}

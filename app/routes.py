@@ -6,7 +6,7 @@ from sqlalchemy.orm import Query,query
 from sqlalchemy.sql import text
 from sqlalchemy.sql.expression import true 
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm, AddPortfoliosForm,AddSectorForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm, AddStocksForm, AddPortfoliosForm,AddSectorForm, SearchUsersForm
 from flask_login import login_required, current_user, login_user, logout_user
 from app.models import User, Mutual_Funds, Stocks, Portfolios,current_fund_price, Holdings,Sectors
 from werkzeug.urls import url_parse
@@ -103,10 +103,14 @@ def admin():
     cfp_results = current_fund_price.query.all()
     stonk_results = Stocks.query.all()
     sector_results = Sectors.query.all()
+
+    form = SearchUsersForm()
+    if form.validate_on_submit():
+        user_results = User.query.filter_by(username=form.username.data)
     return render_template('admin.html',title='Admin',user_results=user_results,
     port_results = port_results, hold_results = hold_results,mf_results = mf_results,
     cfp_results = cfp_results, stonk_results =  stonk_results,sector_results=sector_results, user_data = True, port_data = True,
-    hold_data = True, mf_data = True, cfp_data = True, stonk_data = True, sector_data = True)
+    hold_data = True, mf_data = True, cfp_data = True, stonk_data = True, sector_data = True, form=form)
 
 @app.route('/mutualFunds',methods=['GET', 'POST'])
 def mutualFunds():
@@ -295,22 +299,7 @@ def render_query(statement, db_session):
 
 @app.route('/graphSectors', methods=['GET','POST'])
 def graphSectors():
-    labels = [
-        'JAN', 'FEB', 'MAR', 'APR',
-        'MAY', 'JUN', 'JUL', 'AUG',
-        'SEP', 'OCT', 'NOV', 'Communications']
-    values = [
-        967.67, 1190.89, 1079.75, 1349.19,
-        2328.91, 2504.28, 2873.83, 4764.87,
-        4349.29, 6458.30, 9907, 16297]
-    colors = [
-    "#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA",
-    "#ABCDEF", "#DDDDDD", "#ABCABC", "#4169E1",
-    "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"]
-    pie_values = values
-    pie_labels = labels
-    return render_template('graphSectors.html', title='Mutual Fund Sector Breakdown', max=17000, set=zip(values, labels, colors))
-
+    return render_template('graphSectors.html', title='Mutual Fund Sector Breakdown')
 
 
 @app.route('/sectors' ,methods=['GET','POST'])

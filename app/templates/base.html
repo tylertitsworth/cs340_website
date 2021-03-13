@@ -22,7 +22,7 @@
                     <li><a href="{{ url_for('sectors') }}">{{ ('Sectors') }}</a></li>
                     <li><a href="{{ url_for('admin') }}">{{ ('Admin') }}</a></li>
                     <li><a href="{{ url_for('viewPortfolioHoldings') }}">{{ ('Portfolio Holdings') }}</a></li>
-                    <!-- <li><a href="{{ url_for('graphSectors') }}">{{ ('graphSectors') }}</a></li> -->
+                    <li><a href="{{ url_for('graphSectors') }}">{{ ('graphSectors') }}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}
