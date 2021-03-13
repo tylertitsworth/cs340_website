@@ -3,6 +3,7 @@ config.py
 constants.py
 nohup.out
 forever.txt
+output.txt
 # Created by https://www.toptal.com/developers/gitignore/api/python,react,flask
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,react,flask
 
