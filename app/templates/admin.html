@@ -3,17 +3,20 @@
 
 
 {% block app_content %}
+
+
+
+
+<!-- User Table -->
+<div class="container">
 <div class="container">
 <h4>Search Users</h4>
       <div class="row">    
             <div class="col-md-4">
-                {{ wtf.quick_form(form) }}
+                {{ wtf.quick_form(user_search_form) }}
             </div>
         </div>
 </div>
-
-<!-- User Table -->
-<div class="container">
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -51,6 +54,15 @@
 
 <!-- Portfolios Table, 1:m [User : Portfolios]; m:m [Portfolios : Mutual_Funds, Relationship Table: Holdings] -->
 <div class="container">
+    <div class="container">
+        <h4>Search Portfolios</h4>
+              <div class="row">    
+                    <div class="col-md-4">
+                        {{ wtf.quick_form(port_search_form) }}
+                    </div>
+                </div>
+        </div>
+
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -98,7 +110,15 @@
 <!-- Holdings Table, m:m [portfolios : mutual funds]  -->
 
 <div class="container">
-<div class="table-responsive" >
+    <div class="container">
+        <h4>Search Holdings</h4>
+              <div class="row">    
+                    <div class="col-md-4">
+                        {{ wtf.quick_form(holdings_search_form) }}
+                    </div>
+                </div>
+        </div>
+    <div class="table-responsive" >
     <table class="table">
         <thead>
             <caption> Holdings </caption>
@@ -109,7 +129,6 @@
                 <th>  Mutual Fund Shares  </th>
                 <th>  Mutual Fund NAV  </th>
                 <th>  Portfolio Amount Invested  </th>
-                <th>  current_share_price  </th>
                 <th>  Edit/Delete  </th>
             </tr>
         </thead>
@@ -138,6 +157,14 @@
 </div>
 <!-- Mutual Funds Table, m:m [Portfolios : Mutual_Funds, Relationship table: Holdings]; m:m [Mutual_Funds : Stocks, Relationship Table : current_fund_price] -->
 <div class="container">
+    <div class="container">
+        <h4>Search Mutual Funds</h4>
+              <div class="row">    
+                    <div class="col-md-4">
+                        {{ wtf.quick_form(mf_search_form) }}
+                    </div>
+                </div>
+        </div>
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -189,6 +216,14 @@
 <!-- Current_Fund_Price Table m:m [Mutual_Funds : Stocks]  -->
 
 <div class="container">
+    <div class="container">
+        <h4>Search Current Fund Price</h4>
+              <div class="row">    
+                    <div class="col-md-4">
+                        {{ wtf.quick_form(cfp_search_form) }}
+                    </div>
+                </div>
+    </div>
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -212,9 +247,9 @@
                     <td>{{  cfp_row.total_shares  }}</td>
                     <td>${{  cfp_row.price_per_share  }}</td>
                     <td> 
-                        <a href="{{url_for('editStocks', id=cfp_row.id)}}">
+                        <a href="{{url_for('editCFP', id=cfp_row.id)}}">
                             <button type="button">  Edit  </button></a>
-                        <a href="{{url_for('deleteStocks', id=cfp_row.id)}}">
+                        <a href="{{url_for('deleteCFP', id=cfp_row.id)}}">
                             <button type="button">  Delete  </button></a>
                     </td>
                 </tr>
@@ -227,7 +262,15 @@
 
 <!-- Stocks Table, 1:m [Stocks:Sectors]; m:m [Mutual_Funds : Stocks ]  -->
 <div class="container">
-<div class="table-responsive" >
+    <div class="container">
+        <h4>Search Stocks</h4>
+              <div class="row">    
+                    <div class="col-md-4">
+                        {{ wtf.quick_form(stock_search_form) }}
+                    </div>
+                </div>
+        </div>
+    <div class="table-responsive" >
     <table class="table">
         <thead>
             <caption>  Stocks  </caption>
@@ -273,6 +316,14 @@
 
 <!-- Sectors table -->
 <div class="container">
+    <div class="container">
+        <h4>Search Sectors</h4>
+              <div class="row">    
+                    <div class="col-md-4">
+                        {{ wtf.quick_form(sector_search_form) }}
+                    </div>
+                </div>
+        </div>
 <div class="table-responsive" >
     <table class="table">
         <thead>

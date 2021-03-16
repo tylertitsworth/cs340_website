@@ -12,8 +12,8 @@
     {% endif %}
     {% endwith %}
 
-    {# application content needs to be provided in the app_content block #}
-    {% block app_content %}{% endblock %}
+    <!-- {# application content needs to be provided in the app_content block #}
+    {% block app_content %}{% endblock %} -->
 </div>
 
 <div class="container">
@@ -29,7 +29,9 @@
                 <th>  shares_avail  </th>
                 <th>  initial_offering_price  </th>
                 <th>  Sector  </th>
+                {% if edit_delete %}
                 <th>  Edit/Delete  </th>
+                {%  endif  %}
             </tr>
         </thead>
         <tbody> 
@@ -44,14 +46,14 @@
                     <td>{{  s_row.shares_avail  }}</td>
                     <td>${{ s_row.initial_offering_price  }}</td>
                     <td>{{  s_row.sector_id  }}</td>
+                    {%  if ent_page  %}
                     <td> 
                         <a href="{{url_for('editStocks', id=s_row.id)}}">
                             <button type="button">  Edit  </button></a>
                         <a href="{{url_for('deleteStocks', id=s_row.id)}}">
                             <button type="button">  Delete  </button></a>
                     </td>
-                    
-    
+                    {%  endif  %}
                 </tr>
             {% endfor %}
             {% endif %}

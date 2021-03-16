@@ -7,7 +7,7 @@ from sqlalchemy.orm import Query,query
 from sqlalchemy.sql import text
 from sqlalchemy.sql.expression import true 
 from app import app, db, charts
-from app.forms import AddPortfoliosForm, AddSectorForm, LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm,AddStocksForm, SearchUsersForm,AddHoldingsForm,Add_CFP_Form
+from app.forms import AddPortfoliosForm, AddSectorForm, LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm,AddStocksForm, SearchUsersForm,AddHoldingsForm,Add_CFP_Form, SearchCFPForm, SearchHoldingsForm, SearchMutualFundsForm, SearchSectorsForm, SearchStocksForm
 from flask_login import login_required, current_user, login_user, logout_user
 from app.models import User, Mutual_Funds, Stocks, Portfolios,current_fund_price, Holdings,Sectors
 from werkzeug.urls import url_parse
@@ -26,9 +26,10 @@ def index():
     results = Portfolios.query.filter_by(user_id = current_user.get_id())
     add_form = AddPortfoliosForm()
     if add_form.validate_on_submit():
-        portfolio = Portfolios
+        portfolio = Portfolios()
         add_form.populate_obj(portfolio)
         # portfolio = Portfolios(name=add_form.name.data, initial_dollars=add_form.initial_dollars.data, dollars_invested_port=add_form.dollars_invested_port.data, user_id=current_user.get_id())
+        portfolio.user_id = current_user.get_id()
         db.session.add(portfolio)
         db.session.commit()
         flash("Congratulations, you added a Portfolio")
@@ -106,13 +107,31 @@ def admin():
     stonk_results = Stocks.query.all()
     sector_results = Sectors.query.all()
 
-    form = SearchUsersForm()
+    user_search_results = User.query.all()
+    port_search_results = Portfolios.query.all()
+    hold_search_results = Holdings.query.all()
+    mf_search_results = Mutual_Funds.query.all()
+    cfp_search_results = current_fund_price.query.all()
+    stock_search_results = Stocks.query.all()
+    sector_search_results = Sectors.query.all()
+    
+    user_search_form=SearchUsersForm()
+    port_search_form = SearchUsersForm()
+    holdings_search_form = SearchHoldingsForm
+    mf_search_form = SearchMutualFundsForm()
+    stock_search_form = SearchStocksForm()
+    cfp_search_form = SearchCFPForm()
+    sector_search_form = SearchSectorsForm()
+    
     if form.validate_on_submit():
         user_results = User.query.filter_by(username=form.username.data)
+
     return render_template('admin.html',title='Admin',user_results=user_results,
     port_results = port_results, hold_results = hold_results,mf_results = mf_results,
     cfp_results = cfp_results, stonk_results =  stonk_results,sector_results=sector_results, user_data = True, port_data = True,
-    hold_data = True, mf_data = True, cfp_data = True, stonk_data = True, sector_data = True, form=form)
+    hold_data = True, mf_data = True, cfp_data = True, stonk_data = True, sector_data = True, user_search_form=user_search_form,
+    port_search_form = port_search_form, holdings_search_form = holdings_search_form, mf_search_form = mf_search_form, stock_search_form = stock_search_form,
+    cfp_search_form = cfp_search_form, sector_search_form = sector_search_form)
 
 @app.route('/mutualFunds',methods=['GET', 'POST'])
 def mutualFunds():
@@ -161,8 +180,8 @@ def stocks():
         db.session.add(new_stock)
         db.session.commit()
         flash("Congratulations, you added a Stock!")
-        return redirect(url_for('view_stocks'))
-    return render_template('stocks.html', title='Stocks', stonk_results=stonk_results, form=form, grow=True, stonk_data=True)
+        return redirect(url_for('stocks'))
+    return render_template('stocks.html', title='Stocks', stonk_results=stonk_results, form=form, grow=True, stonk_data=True, ent_page=True,edit_delete=True)
 
 @app.route('/editStocks/<int:id>',methods=['GET', 'POST'])
 def editStocks(id):
@@ -331,7 +350,7 @@ def graphSectors():
     stock_sect_combo = list(map(list,zip(sect_names,stock_sect_vals)))
     print(stock_sect_combo)
     my_chart.add_rows(stock_sect_combo)
-    return render_template('graphSectors.html', title='Mutual Fund Sector Breakdown', my_chart=my_chart)
+    return render_template('graphSectors.html', title='Mutual Fund Sector Breakdown', my_chart=my_chart, stock_sects=True,sect_out = stock_sect_combo)
 
 
 
@@ -347,10 +366,29 @@ def sectors():
         return redirect(url_for('sectors'))
     return render_template('sectors.html', title='Sectors', sector_results=sector_results, form=form, sector_data=True, admin_thead = False, admin_td = False, entity_home=True)
 
+@app.route('/editSectors/<int:id>',methods=['GET', 'POST'])
+def editSectors(id):
+    results = Sectors.query.filter_by(id=id).first_or_404()
+    form = AddSectorForm(obj=results)
+    if form.validate_on_submit():
+        form.populate_obj(results)
+        db.session.commit()
+        flash("Congratulations, you edited a Sector!")
+        return redirect(url_for('sectors'))
+    return render_template('editStocks.html', title="Edit Stocks",results=results,form=form,fund=True)
+
+@app.route('/deleteSectors/<int:id>',methods=['GET', 'POST'])
+def deleteSectors(id):
+    Sectors.query.filter_by(id=id).delete()
+    flash("Congratulations, you deleted a Sector!")
+    db.session.commit()
+    return redirect(url_for('sectors'))
+
 @app.route('/currentFundPrice/<int:id>' ,methods=['GET','POST'])
 def currentFundPrice(id):
     results = current_fund_price.query.filter_by(mf_id=id)
-    form = Add_CFP_Form()
+    form = Add_CFP_Form(mf_id = id)
+    stonk_results = Stocks.query.all()
     if form.validate_on_submit():
         new_cfp = current_fund_price()
         form.populate_obj(new_cfp)
@@ -358,7 +396,32 @@ def currentFundPrice(id):
         db.session.commit()
         flash("Congratulations, you added a Stock!")
         return redirect(url_for('currentFundPrice'))
-    return render_template('currentFundPrice.html', title='Currrent Fund Price', cfp_results=results, form=form, add_cfp=True, data=True)
+    return render_template('currentFundPrice.html', title='Currrent Fund Price', cfp_results=results, form=form, add_cfp=True, data=True, stonk_data=True, stonk_results=stonk_results, ent_page=False,  edit_delete=False,mf_id=id)
+
+
+@app.route('/editCFP/<int:id>' ,methods=['GET','POST'])
+def editCFP(id):
+    results = current_fund_price.query.filter_by(id=id)
+    form = Add_CFP_Form(obj=results)
+    if form.validate_on_submit():
+        form.populate_obj(results)
+        db.session.commit()
+        return redirect(url_for('currentFundPrice'))
+    return render_template('editCFP.html', title="Edit Current Fund Price",results=results,form=form)
+
+
+
+@app.route('/deleteCFP/<int:id>' ,methods=['GET','POST'])
+def deleteCFP(id):
+    result = current_fund_price.query.filter_by(id=id)
+    curr_mf_id = 0
+    for x in result:
+        curr_mf_id = x.mf_id
+        print(x)
+    current_fund_price.query.filter_by(id=id).delete()
+    db.session.commit()
+    return redirect(url_for('admin'))
+
 
 @app.route('/editUser' ,methods=['GET','POST'])
 def editUser():

@@ -1,45 +1,10 @@
-{% extends "base.html" %}
+{% extends "stocks.html" %}
 {% import 'bootstrap/wtf.html' as wtf %}
-
+<!-- {{  super.super()  }} -->
 {% block content %}
 
-<div class="container">
-    <!-- <div class="table-responsive" >
-    <table class="table">
-        <thead>
-            <tr>
-                <th>  id  </th>
-                <th>  ticker_symbol  </th>
-                <th>  legal_name  </th>
-                <th>  total_shares  </th>
-                <th>  current_price  </th>
-                <th>  Sector  </th>
-                <th>  Edit/Delete  </th>
-            </tr>
-        </thead>
-        <tbody> 
-            {% if data%}
-            {% for row in results %}
-                <tr>
-                    <td>{{  row.id  }}</td>
-                    <td>{{  row.ticker_symbol  }}</td>
-                    <td>{{  row.legal_name  }}</td>
-                    <td>{{  row.total_shares  }}</td>
-                    <td>${{  row.current_price  }}</td>
-                    <td>{{  'Shares Bought x Price'  }}</td>
-                    <td> 
-                        <a href="{{url_for('editStocks', id=row.id)}}">
-                            <button type="button">  Edit  </button></a>
-                        <a href="{{url_for('deleteStocks', id=row.id)}}">
-                            <button type="button">  Delete  </button></a>
-                    </td>
-                </tr>
-            {% endfor %}
-            {% endif %}
-        </tbody>
-    </table>
-    </div> -->
 
+<div class="container">
     <div class="table-responsive" >
         <table class="table">
             <thead>
@@ -63,8 +28,10 @@
                         <td>{{  cfp_row.total_shares  }}</td>
                         <td>${{  cfp_row.price_per_share  }}</td>
                         <td>
-                            <a href="{{url_for('addHoldings', id=cfp_row.mf_id )}}">
+                            <a href="{{url_for('editCFP', id=cfp_row.mf_id )}}">
                                 <button type="button">Edit  Current Fund Price</button></a>
+                            <a href="{{url_for('deleteCFP', id=cfp_row.mf_id )}}">
+                                <button type="button"> Delete Current Fund Price</button></a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -74,6 +41,7 @@
         </div>
 </div>
 
+{{  super()  }}
 {% if add_cfp  %}
     <div class="container">
         <h4>Add Stock To Mutual Fund Current Fund Price</h4>

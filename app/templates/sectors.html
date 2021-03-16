@@ -23,9 +23,9 @@
                     <td>{{  sect_row.id  }}</td>
                     <td>{{  sect_row.name  }}</td>
                     <td> 
-                        <a href="{{url_for('editStocks', id=sect_row.id)}}">
+                        <a href="{{url_for('editSectors', id=sect_row.id)}}">
                             <button type="button">  Edit  </button></a>
-                        <a href="{{url_for('deleteStocks', id=sect_row.id)}}">
+                        <a href="{{url_for('deleteSectors', id=sect_row.id)}}">
                             <button type="button">  Delete  </button></a>
                     </td>
                     {%  if  admin_td  %}
