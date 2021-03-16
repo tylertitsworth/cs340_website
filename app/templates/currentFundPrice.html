@@ -3,7 +3,8 @@
 
 {% block content %}
 
-<div class="table-responsive" >
+<div class="container">
+    <!-- <div class="table-responsive" >
     <table class="table">
         <thead>
             <tr>
@@ -37,6 +38,55 @@
             {% endif %}
         </tbody>
     </table>
+    </div> -->
+
+    <div class="table-responsive" >
+        <table class="table">
+            <thead>
+                <caption>  Current_Fund_Price  </caption>
+                <tr>
+                    <th>  id  </th>
+                    <th>  mf_id  </th>
+                    <th>  stocks_id </th>
+                    <th>  total_shares  </th>
+                    <th>  price_per_share  </th>
+                    <th>  Edit/Delete  </th>
+                </tr>
+            </thead>
+            <tbody> 
+                {% if data %}
+                {% for cfp_row in cfp_results %}
+                    <tr>
+                        <td>{{  cfp_row.id  }}</td>
+                        <td>{{  cfp_row.mf_id  }}</td>
+                        <td>{{  cfp_row.stocks_id  }}</td>
+                        <td>{{  cfp_row.total_shares  }}</td>
+                        <td>${{  cfp_row.price_per_share  }}</td>
+                        <td>
+                            <a href="{{url_for('addHoldings', id=cfp_row.mf_id )}}">
+                                <button type="button">Edit  Current Fund Price</button></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+        </div>
+</div>
+
+{% if add_cfp  %}
+    <div class="container">
+        <h4>Add Stock To Mutual Fund Current Fund Price</h4>
+        <div class="row">
+
+            <div class="col-md-4">
+
+                {{ wtf.quick_form(form) }}
+            </div>
+        </div>
+
     </div>
+{%  endif  %}
+
 
 {% endblock %}

@@ -16,6 +16,7 @@
     {% block app_content %}{% endblock %}
 </div>
 
+<div class="container">
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -23,10 +24,10 @@
                 <th>  id  </th>
                 <th>  ticker_symbol  </th>
                 <th>  legal_name  </th>
-                <th>  total_shares_circulation  </th>
-                <th>  total_shares_available  </th>
-                <th>  initial_price  </th>
-                <th>  current_price  </th>
+                <th>  current_share_price  </th>
+                <th>  total_number_shares  </th>
+                <th>  shares_avail  </th>
+                <th>  initial_offering_price  </th>
                 <th>  Sector  </th>
                 <th>  Edit/Delete  </th>
             </tr>
@@ -38,10 +39,10 @@
                     <td>{{  s_row.id  }}</td>
                     <td>{{  s_row.ticker_symbol  }}</td>
                     <td>{{  s_row.legal_name  }}</td>
-                    <td>{{  s_row.total_shares_circulation  }}</td>
-                    <td>{{  s_row.total_shares_available  }}</td>
-                    <td>{{  s_row.initial_price  }}</td>
-                    <td>${{ s_row.current_price  }}</td>
+                    <td>$ {{  s_row.current_share_price  }}</td>
+                    <td>{{  s_row.total_number_shares  }}</td>
+                    <td>{{  s_row.shares_avail  }}</td>
+                    <td>${{ s_row.initial_offering_price  }}</td>
                     <td>{{  s_row.sector_id  }}</td>
                     <td> 
                         <a href="{{url_for('editStocks', id=s_row.id)}}">
@@ -66,5 +67,5 @@
     </div>
 </div>
 {% endif %}
-
+</div>
 {% endblock %}

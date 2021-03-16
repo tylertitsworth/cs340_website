@@ -3,15 +3,17 @@
 
 
 {% block app_content %}
-
-<h3>Search Users</h3>
-<div class="row">
-    <div class="col-md-4">
-        {{ wtf.quick_form(form) }}
-    </div>
+<div class="container">
+<h4>Search Users</h4>
+      <div class="row">    
+            <div class="col-md-4">
+                {{ wtf.quick_form(form) }}
+            </div>
+        </div>
 </div>
 
 <!-- User Table -->
+<div class="container">
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -31,7 +33,7 @@
                     <td>{{  person.id  }}</td>
                     <td>{{  person.username  }}</td>
                     <td>{{  person.email }}</td>
-                    <td>{{  person.password_hash  }}</td>
+                    <td>  Password  </td>
                     <td> 
                         <a href="{{url_for('editUser', id=person.id)}}">
                             <button type="button">  Edit  </button></a>
@@ -44,8 +46,11 @@
         </tbody>
     </table>
     </div>
+</div>
+
 
 <!-- Portfolios Table, 1:m [User : Portfolios]; m:m [Portfolios : Mutual_Funds, Relationship Table: Holdings] -->
+<div class="container">
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -53,8 +58,8 @@
             <tr>
                 <th>  id  </th>
                 <th>  name  </th>
-                <th>  initial_dollars  </th>
-                <th>  dollars_invested_port  </th>
+                <th>  initial_investment_amt  </th>
+                <th>  dollars_available </th>
                 <th>  user_id  </th>
                 <!-- <th> Mutual Funds </th> -->
                 <th>  Edit/Delete  Mutual Funds</th>
@@ -67,8 +72,8 @@
                 <tr>
                     <td>{{  port_row.id  }}</td>
                     <td>{{  port_row.name  }}</td>
-                    <td>${{  port_row.initial_dollars  }}</td>
-                    <td>${{  port_row.dollars_invested_port  }}</td>
+                    <td>${{  port_row.initial_investment_amt  }}</td>
+                    <td>${{  port_row.dollars_available }}</td>
                     <td>{{  port_row.user_id  }}</td>
                     <!-- <td>{{  port_row.mf_port_rel  }}</td> -->
                     <td>
@@ -89,9 +94,10 @@
         </tbody>
     </table>
     </div>
-
+</div>
 <!-- Holdings Table, m:m [portfolios : mutual funds]  -->
 
+<div class="container">
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -100,9 +106,9 @@
                 <th>  id  </th>
                 <th>  port_id_hold  </th>
                 <th>  mf_id_hold  </th>
-                <th>  amount_invested  </th>
-                <th>  total_shares_invested  </th>
-                <th>  initial_share_price  </th>
+                <th>  Mutual Fund Shares  </th>
+                <th>  Mutual Fund NAV  </th>
+                <th>  Portfolio Amount Invested  </th>
                 <th>  current_share_price  </th>
                 <th>  Edit/Delete  </th>
             </tr>
@@ -114,10 +120,9 @@
                     <td>{{  holds.id  }}</td>
                     <td>{{  holds.port_id_hold  }}</td>
                     <td>{{  holds.mf_id_hold }}</td>
-                    <td>{{  holds.amount_invested  }}</td>
-                    <td>{{  holds.total_shares_invested  }}</td>
-                    <td>{{  holds.initial_share_price  }}</td>
-                    <td>{{  holds.current_share_price  }}</td>
+                    <td>{{  holds.mf_shares  }}</td>
+                    <td>{{  holds.mf_nav  }}</td>
+                    <td>{{  holds.port_amount_invested  }}</td>
                     <td> 
                         <a href="{{url_for('editUser', id=holds.id)}}">
                             <button type="button">  Edit  </button></a>
@@ -130,9 +135,9 @@
         </tbody>
     </table>
     </div>
-
+</div>
 <!-- Mutual Funds Table, m:m [Portfolios : Mutual_Funds, Relationship table: Holdings]; m:m [Mutual_Funds : Stocks, Relationship Table : current_fund_price] -->
-
+<div class="container">
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -141,13 +146,13 @@
                 <th>  ID  </th>
                 <th>  name  </th>
                 <th>  initial_investment_amt  </th>
+                <th>  nav  </th>
+                <th>  Shares Outstanding  </th>
                 <th>  dollars_available  </th>
                 <th>  dollars_invested  </th>
-                <th>  mf_share_price  </th>
                 <th>  total_mf_sector  </th>
                 <th>  portfolio id  </th>
                 <th>  Edit/Delete  </th> 
-                <th>  Stocks  </th>
                 <th>  Current Fund Price  </th>
             </tr>
         </thead>
@@ -157,11 +162,11 @@
                 <tr>
                     <td>{{  mf_row.id  }}</td>
                     <td>{{  mf_row.name  }}</td>
-
                     <td>${{  mf_row.initial_investment_amt  }}</td>
+                    <td>${{  mf_row.nav  }}</td>
+                    <td>{{  mf_row.shares_outstanding  }}</td>
                     <td>${{  mf_row.dollars_available  }}</td>
                     <td>${{  mf_row.dollars_invested  }}</td>
-                    <td>${{  mf_row.mf_share_price  }}</td>
                     <td>{{  mf_row.total_mf_sector  }}%</td>
                     <td> {{  mf_row.portfolio_id  }} </td>
                     <td>
@@ -169,12 +174,6 @@
                             <button type="button">  Edit  </button></a>
                         <a href="{{url_for('deleteMutualFunds', id=mf_row.id)}}">
                             <button type="button">  Delete  </button></a>
-                    </td>
-                    <td>
-                        <a href="{{url_for('viewHoldings', id=mf_row.id)}}">
-                            <button type="button">View</button></a>
-                        <a href="{{url_for('addHoldings', id=mf_row.id)}}">
-                            <button type="button">Add</button></a>
                     </td>
                     <td>  
                         <a href="{{url_for('currentFundPrice', id=mf_row.id)}}">
@@ -186,9 +185,10 @@
         </tbody>
     </table>
     </div>
-
+</div>
 <!-- Current_Fund_Price Table m:m [Mutual_Funds : Stocks]  -->
 
+<div class="container">
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -197,7 +197,7 @@
                 <th>  id  </th>
                 <th>  mf_id  </th>
                 <th>  stocks_id </th>
-                <th>  number_shares  </th>
+                <th>  total_shares  </th>
                 <th>  price_per_share  </th>
                 <th>  Edit/Delete  </th>
             </tr>
@@ -209,7 +209,7 @@
                     <td>{{  cfp_row.id  }}</td>
                     <td>{{  cfp_row.mf_id  }}</td>
                     <td>{{  cfp_row.stocks_id  }}</td>
-                    <td>{{  cfp_row.number_shares  }}</td>
+                    <td>{{  cfp_row.total_shares  }}</td>
                     <td>${{  cfp_row.price_per_share  }}</td>
                     <td> 
                         <a href="{{url_for('editStocks', id=cfp_row.id)}}">
@@ -223,9 +223,10 @@
         </tbody>
     </table>
     </div>
-
+</div>
 
 <!-- Stocks Table, 1:m [Stocks:Sectors]; m:m [Mutual_Funds : Stocks ]  -->
+<div class="container">
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -234,10 +235,10 @@
                 <th>  id  </th>
                 <th>  ticker_symbol  </th>
                 <th>  legal_name  </th>
-                <th>  total_shares_circulation  </th>
-                <th>  total_shares_available  </th>
-                <th>  initial_price  </th>
-                <th>  current_price  </th>
+                <th>  current_share_price  </th>
+                <th>  total_number_shares  </th>
+                <th>  shares_avail  </th>
+                <th>  initial_offering_price  </th>
                 <th>  Sector  </th>
                 <th>  Edit/Delete  </th>
             </tr>
@@ -249,10 +250,10 @@
                     <td>{{  s_row.id  }}</td>
                     <td>{{  s_row.ticker_symbol  }}</td>
                     <td>{{  s_row.legal_name  }}</td>
-                    <td>{{  s_row.total_shares_circulation  }}</td>
-                    <td>{{  s_row.total_shares_available  }}</td>
-                    <td>{{  s_row.initial_price  }}</td>
-                    <td>${{ s_row.current_price  }}</td>
+                    <td>$ {{  s_row.current_share_price  }}</td>
+                    <td>{{  s_row.total_number_shares  }}</td>
+                    <td>{{  s_row.shares_avail  }}</td>
+                    <td>${{ s_row.initial_offering_price  }}</td>
                     <td>{{  s_row.sector_id  }}</td>
                     <td> 
                         <a href="{{url_for('editStocks', id=s_row.id)}}">
@@ -268,9 +269,10 @@
         </tbody>
     </table>
     </div>
-
+</div>
 
 <!-- Sectors table -->
+<div class="container">
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -300,6 +302,8 @@
         </tbody>
     </table>
     </div>
+</div>
+
 
 
 {% endblock %}

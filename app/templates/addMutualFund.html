@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<div class="container">
+<!-- <div class="container">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
@@ -14,18 +14,19 @@
 
     {# application content needs to be provided in the app_content block #}
     {% block app_content %}{% endblock %}
-</div>
-
+</div> -->
+<div class="container">
 <div class="table-responsive" >
 <table class="table">
     <thead>
-        <tr>
+        <tr>            
             <th>  ID  </th>
             <th>  name  </th>
             <th>  initial_investment_amt  </th>
+            <th>  nav  </th>
+            <th>  Shares Outstanding  </th>
             <th>  dollars_available  </th>
             <th>  dollars_invested  </th>
-            <th>  mf_share_price  </th>
             <th>  total_mf_sector  </th>
             <th>  portfolio id  </th>
             <th>  Add to Portfolio  </th>
@@ -38,9 +39,10 @@
                 <td>{{  mf_row.id  }}</td>
                 <td>{{  mf_row.name  }}</td>
                 <td>${{  mf_row.initial_investment_amt  }}</td>
+                <td>${{  mf_row.nav  }}</td>
+                <td>{{  mf_row.shares_outstanding  }}</td>
                 <td>${{  mf_row.dollars_available  }}</td>
                 <td>${{  mf_row.dollars_invested  }}</td>
-                <td>${{  mf_row.mf_share_price  }}</td>
                 <td>{{  mf_row.total_mf_sector  }}%</td>
                 <td> {{  mf_row.portfolio_id  }} </td>
                 <td>
@@ -54,4 +56,15 @@
 </table>
 </div>
 
+{% if add_mf  %}
+<div class="container">
+    <h3>Add To Portfolio Holdings</h3>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(port_form) }}
+        </div>
+    </div>
+    </div>
+{%  endif  %}
+</div>
 {% endblock %}

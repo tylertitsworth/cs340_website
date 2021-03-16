@@ -2,6 +2,7 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
+<div class="container">
 {% if fund %}
 <div><h3>Current Mutual Fund: {{  results  }}</h3></div>
 {%  endif  %}
@@ -12,5 +13,5 @@
         {{ wtf.quick_form(form) }}
     </div>
 </div>
-
+</div>
 {% endblock %}

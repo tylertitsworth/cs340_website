@@ -5,7 +5,7 @@ from sqlalchemy.orm.relationships import foreign
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_login import UserMixin
-from app import db, login
+from app import db, login, charts
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -50,12 +50,11 @@ class Holdings(db.Model):
     mf_shares = db.Column(db.Float, nullable=True)
     # nav at the transaction
     mf_nav = db.Column(db.Float, nullable=True)
-
     port_amount_invested = db.Column(db.Float, nullable=False)
     mfund_hold_rel =  db.relationship('Mutual_Funds',backref=backref('Holdings',cascade="all,delete-orphan"))
     port_hold_rel = db.relationship('Portfolios',backref=backref('Holdings',cascade="all,delete-orphan"))
     def __repr__(self):
-        return '<Holdings {}>'.format(self.id)
+        return '<Holdings id: {}>'.format(self.id)
 
 
 

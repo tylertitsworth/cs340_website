@@ -15,15 +15,15 @@
     {# application content needs to be provided in the app_content block #}
     {% block app_content %}{% endblock %}
 </div>
-
+<div class="container">
 <div class="table-responsive" >
 <table class="table">
     <thead>
         <tr>
             <th>  ID  </th>
             <th>  name  </th>
-            <th>  initial_dollars  </th>
-            <th>  dollars_invested_port</th>
+            <th>  initial_investment_amt  </th>
+            <th>  dollars_available  </th>
             <th>  Mutual Funds  </th>
             <th>  Edit/Delete  </th>
         </tr>
@@ -34,12 +34,14 @@
             <tr>
                 <td>{{  row.id  }}</td>
                 <td>{{  row.name  }}</td>
-                <td>${{  row.initial_dollars  }}</td>
-                <td>${{  row.dollars_invested_port  }}</td>
+                <td>${{  row.initial_investment_amt  }}</td>
+                <td>${{  row.dollars_available  }}</td>
                 <td>
-                    <a href="{{url_for('viewMutualFunds', id=row.id)}}">
+                    <!-- <a href="{{url_for('viewMutualFunds', id=row.id)}}">
+                        <button type="button">View</button></a> -->
+                    <a href="{{url_for('viewPortfolioHoldings', id=row.id)}}">
                         <button type="button">View</button></a>
-                    <a href="{{url_for('addMutualFundtoPortfolio', id=row.id)}}">
+                        <a href="{{url_for('addMutualFundtoPortfolio', id=row.id)}}">
                         <button type="button">Add</button></a>
                 </td>
                 <td>
@@ -54,8 +56,10 @@
     </tbody>
 </table>
 </div>
+</div>
 
 {% if view %}
+<div class="container">
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -63,9 +67,10 @@
                 <th>  ID  </th>
                 <th>  name  </th>
                 <th>  initial_investment_amt  </th>
+                <th>  nav  </th>
+                <th>  Shares Outstanding  </th>
                 <th>  dollars_available  </th>
                 <th>  dollars_invested  </th>
-                <th>  mf_share_price  </th>
                 <th>  total_mf_sector  </th>
             </tr>
         </thead>
@@ -76,9 +81,10 @@
                     <td>{{  mf_row.id  }}</td>
                     <td>{{  mf_row.name  }}</td>
                     <td>${{  mf_row.initial_investment_amt  }}</td>
+                    <td>${{  mf_row.nav  }}</td>
+                    <td>{{  mf_row.shares_outstanding  }}</td>
                     <td>${{  mf_row.dollars_available  }}</td>
                     <td>${{  mf_row.dollars_invested  }}</td>
-                    <td>${{  mf_row.mf_share_price  }}</td>
                     <td>{{  mf_row.total_mf_sector  }}%</td>
                 </tr>
             {% endfor %}
@@ -86,15 +92,18 @@
         </tbody>
     </table>
 </div>
+</div>
 {% endif %}
 
 
 {% if grow %}
+<div class="container">
 <h3>Add Portfolio</h3>
 <div class="row">
     <div class="col-md-4">
         {{ wtf.quick_form(add_form) }}
     </div>
+</div>
 </div>
 {% endif %}
 
