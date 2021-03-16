@@ -60,15 +60,15 @@ class AddMutualFundsForm(FlaskForm):
     dollars_invested = FloatField('dollars_invested')
     total_mf_sector = FloatField('total_mf_sector',validators=[DataRequired()])
     submit = SubmitField('Submit')
-    
+
 class AddStocksForm(FlaskForm):
     ticker_symbol = StringField('ticker_symbol', validators=[DataRequired()])
     legal_name = StringField('legal_name', validators=[DataRequired()])
-    current_share_price = FloatField('current_share_price',validators=[DataRequired()]) 
-    total_number_shares = FloatField('total_number_shares',validators=[DataRequired()]) 
+    current_share_price = FloatField('current_share_price',validators=[DataRequired()])
+    total_number_shares = FloatField('total_number_shares',validators=[DataRequired()])
     shares_available = FloatField('shares_available',validators=[DataRequired()])
-    initial_offering_price = FloatField('initial_offering_price',validators=[DataRequired()]) 
-    sector_id = IntegerField('sector_id',validators=[DataRequired()]) 
+    initial_offering_price = FloatField('initial_offering_price',validators=[DataRequired()])
+    sector_id = IntegerField('sector_id',validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class AddSectorForm(FlaskForm):
@@ -77,44 +77,6 @@ class AddSectorForm(FlaskForm):
 
 class SearchUsersForm(FlaskForm):
     username = StringField('username')
-    submit = SubmitField('Submit')
-
-class SearchStocksForm(FlaskForm):
-    ticker_symbol = StringField('ticker_symbol')
-    legal_name = StringField('legal_name')
-    current_share_price = FloatField('current_share_price') 
-    total_number_shares = FloatField('total_number_shares') 
-    shares_available = FloatField('shares_available')
-    initial_offering_price = FloatField('initial_offering_price') 
-    sector_id = IntegerField('sector_id') 
-    submit = SubmitField('Submit')
-
-class SearchSectorsForm(FlaskForm):
-    name = StringField('name')
-    submit = SubmitField('Submit')
-
-class SearchMutualFundsForm(FlaskForm):
-    name = StringField('name')
-    initial_investment_amt = FloatField('initial_investment_amt')
-    nav = FloatField('NAV')
-    shares_outstanding = FloatField('shares_outstanding')
-    dollars_available = FloatField('dollars_available')
-    dollars_invested = FloatField('dollars_invested')
-    total_mf_sector = FloatField('total_mf_sector')
-    submit = SubmitField('Submit')
-    
-class SearchHoldingsForm(FlaskForm):
-    port_id_hold = IntegerField('Portfolio ID')
-    mf_id_hold = IntegerField('Mutual Fund ID')
-    # mf_shares = FloatField('Total Number of Shares',validators=[DataRequired()])
-    mf_nav = FloatField('Current Mutual Fund NAV:')
-    port_amount_invested = FloatField('Dollar Amount that you would like to invest')
-    submit = SubmitField('Submit')
-class SearchCFPForm(FlaskForm):
-    mf_id = IntegerField('mf_id')
-    stocks_id = IntegerField('stocks_id')
-    total_shares = FloatField('Total Number of Shares')
-    price_per_share = FloatField('price_per_share:')
     submit = SubmitField('Submit')
 
 class AddHoldingsForm(FlaskForm):
@@ -131,4 +93,4 @@ class Add_CFP_Form(FlaskForm):
     total_shares = FloatField('Total Number of Shares')
     price_per_share = FloatField('price_per_share:')
     submit = SubmitField('Submit')
-    
+

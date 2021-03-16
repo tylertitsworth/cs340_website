@@ -5,9 +5,9 @@ from flask_googlecharts import GoogleCharts,PieChart
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import Query,query
 from sqlalchemy.sql import text
-from sqlalchemy.sql.expression import true 
+from sqlalchemy.sql.expression import true
 from app import app, db, charts
-from app.forms import AddPortfoliosForm, AddSectorForm, LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm,AddStocksForm, SearchUsersForm,AddHoldingsForm,Add_CFP_Form, SearchCFPForm, SearchHoldingsForm, SearchMutualFundsForm, SearchSectorsForm, SearchStocksForm
+from app.forms import AddPortfoliosForm, AddSectorForm, LoginForm, RegistrationForm, EditProfileForm, AddMutualFundsForm,AddStocksForm, SearchUsersForm,AddHoldingsForm,Add_CFP_Form
 from flask_login import login_required, current_user, login_user, logout_user
 from app.models import User, Mutual_Funds, Stocks, Portfolios,current_fund_price, Holdings,Sectors
 from werkzeug.urls import url_parse
@@ -77,7 +77,7 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
-    
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -107,31 +107,15 @@ def admin():
     stonk_results = Stocks.query.all()
     sector_results = Sectors.query.all()
 
-    user_search_results = User.query.all()
-    port_search_results = Portfolios.query.all()
-    hold_search_results = Holdings.query.all()
-    mf_search_results = Mutual_Funds.query.all()
-    cfp_search_results = current_fund_price.query.all()
-    stock_search_results = Stocks.query.all()
-    sector_search_results = Sectors.query.all()
-    
     user_search_form=SearchUsersForm()
-    port_search_form = SearchUsersForm()
-    holdings_search_form = SearchHoldingsForm
-    mf_search_form = SearchMutualFundsForm()
-    stock_search_form = SearchStocksForm()
-    cfp_search_form = SearchCFPForm()
-    sector_search_form = SearchSectorsForm()
-    
-    if form.validate_on_submit():
-        user_results = User.query.filter_by(username=form.username.data)
+
+    if user_search_form.validate_on_submit():
+        user_results = User.query.filter_by(username=user_search_form.username.data)
 
     return render_template('admin.html',title='Admin',user_results=user_results,
     port_results = port_results, hold_results = hold_results,mf_results = mf_results,
     cfp_results = cfp_results, stonk_results =  stonk_results,sector_results=sector_results, user_data = True, port_data = True,
-    hold_data = True, mf_data = True, cfp_data = True, stonk_data = True, sector_data = True, user_search_form=user_search_form,
-    port_search_form = port_search_form, holdings_search_form = holdings_search_form, mf_search_form = mf_search_form, stock_search_form = stock_search_form,
-    cfp_search_form = cfp_search_form, sector_search_form = sector_search_form)
+    hold_data = True, mf_data = True, cfp_data = True, stonk_data = True, sector_data = True, user_search_form=user_search_form)
 
 @app.route('/mutualFunds',methods=['GET', 'POST'])
 def mutualFunds():
@@ -156,7 +140,7 @@ def deleteMutualFunds(id):
 
 
 @app.route('/editMutualFunds/<int:id>',methods=['GET', 'POST'])
-def editMutualFunds(id):    
+def editMutualFunds(id):
     results = Mutual_Funds.query.filter_by(id=id).first_or_404()
     form = AddMutualFundsForm(obj=results)
     if form.validate_on_submit():
@@ -170,7 +154,7 @@ def editMutualFunds(id):
         return redirect(url_for('mutualFunds'))
     return render_template('editMutualFunds.html', title="Edit Funds",results=results.name,form=form,fund=True)
 
-@app.route('/stocks',methods=['GET', 'POST']) 
+@app.route('/stocks',methods=['GET', 'POST'])
 def stocks():
     stonk_results = Stocks.query.all()
     form = AddStocksForm()
@@ -224,8 +208,8 @@ def addMutualFund(id, pid):
         db.session.commit()
         return redirect(url_for('index'))
     return render_template('addMutualFund.html', title="Add a Mutual Fund to a Portfolio", results=results, data=True, pid=id, add_mf=True,port_form=port_form)
-    
-    
+
+
     # db.session.commit()
     # print("Mutual Fund", Mutual_Funds.query.filter_by(id=id), " added to Portfolio ", Portfolios.query.filter_by(id=pid), "!")
     # flash("Mutual Fund Added!")
@@ -265,7 +249,7 @@ def addtoHoldings(id):
 def viewHoldings(id):
     add_form = AddMutualFundsForm()
     results = Mutual_Funds.query.all()
-    Mresults = Stocks.query.filter(Stocks.mf_rel.any(id=id)) 
+    Mresults = Stocks.query.filter(Stocks.mf_rel.any(id=id))
     return render_template('mutualFunds.html', title="Mutual Funds", Mresults=Mresults, results=results, add_form=add_form, grow=True, data=True, view=True)
 
 
@@ -329,9 +313,9 @@ def render_query(statement, db_session):
 
 @app.route('/graphSectors', methods=['GET','POST'])
 def graphSectors():
-    my_chart = PieChart("my_chart",options={"title":'Sector Breakdown', 
+    my_chart = PieChart("my_chart",options={"title":'Sector Breakdown',
                                             "width": 600,
-                                            "height": 400, 
+                                            "height": 400,
                                             "is3D": True})
     my_chart.add_column("string", "Sector")
     my_chart.add_column("number", "Dollars Invested")

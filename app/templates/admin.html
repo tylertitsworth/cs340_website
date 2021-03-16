@@ -11,7 +11,7 @@
 <div class="container">
 <div class="container">
 <h4>Search Users</h4>
-      <div class="row">    
+      <div class="row">
             <div class="col-md-4">
                 {{ wtf.quick_form(user_search_form) }}
             </div>
@@ -29,7 +29,7 @@
                 <th>  Edit/Delete  </th>
             </tr>
         </thead>
-        <tbody> 
+        <tbody>
             {% if user_data %}
             {% for person in user_results %}
                 <tr>
@@ -37,12 +37,12 @@
                     <td>{{  person.username  }}</td>
                     <td>{{  person.email }}</td>
                     <td>  Password  </td>
-                    <td> 
+                    <td>
                         <a href="{{url_for('editUser', id=person.id)}}">
                             <button type="button">  Edit  </button></a>
                         <a href="{{url_for('deleteUser', id=person.id)}}">
                             <button type="button">  Delete  </button></a>
-                    </td>    
+                    </td>
                 </tr>
             {% endfor %}
             {% endif %}
@@ -54,15 +54,6 @@
 
 <!-- Portfolios Table, 1:m [User : Portfolios]; m:m [Portfolios : Mutual_Funds, Relationship Table: Holdings] -->
 <div class="container">
-    <div class="container">
-        <h4>Search Portfolios</h4>
-              <div class="row">    
-                    <div class="col-md-4">
-                        {{ wtf.quick_form(port_search_form) }}
-                    </div>
-                </div>
-        </div>
-
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -78,8 +69,8 @@
                 <th>  Edit/Delete  Portfolio</th>
             </tr>
         </thead>
-        <tbody> 
-            {% if port_data %} 
+        <tbody>
+            {% if port_data %}
             {% for port_row in port_results %}
                 <tr>
                     <td>{{  port_row.id  }}</td>
@@ -110,14 +101,6 @@
 <!-- Holdings Table, m:m [portfolios : mutual funds]  -->
 
 <div class="container">
-    <div class="container">
-        <h4>Search Holdings</h4>
-              <div class="row">    
-                    <div class="col-md-4">
-                        {{ wtf.quick_form(holdings_search_form) }}
-                    </div>
-                </div>
-        </div>
     <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -132,8 +115,8 @@
                 <th>  Edit/Delete  </th>
             </tr>
         </thead>
-        <tbody> 
-            {% if hold_data%}
+        <tbody>
+            {% if hold_data %}
             {% for holds in hold_results %}
                 <tr>
                     <td>{{  holds.id  }}</td>
@@ -142,12 +125,12 @@
                     <td>{{  holds.mf_shares  }}</td>
                     <td>{{  holds.mf_nav  }}</td>
                     <td>{{  holds.port_amount_invested  }}</td>
-                    <td> 
+                    <td>
                         <a href="{{url_for('editUser', id=holds.id)}}">
                             <button type="button">  Edit  </button></a>
                         <a href="{{url_for('deleteUser', id=holds.id)}}">
                             <button type="button">  Delete  </button></a>
-                    </td>    
+                    </td>
                 </tr>
             {% endfor %}
             {% endif %}
@@ -157,14 +140,6 @@
 </div>
 <!-- Mutual Funds Table, m:m [Portfolios : Mutual_Funds, Relationship table: Holdings]; m:m [Mutual_Funds : Stocks, Relationship Table : current_fund_price] -->
 <div class="container">
-    <div class="container">
-        <h4>Search Mutual Funds</h4>
-              <div class="row">    
-                    <div class="col-md-4">
-                        {{ wtf.quick_form(mf_search_form) }}
-                    </div>
-                </div>
-        </div>
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -179,12 +154,12 @@
                 <th>  dollars_invested  </th>
                 <th>  total_mf_sector  </th>
                 <th>  portfolio id  </th>
-                <th>  Edit/Delete  </th> 
+                <th>  Edit/Delete  </th>
                 <th>  Current Fund Price  </th>
             </tr>
         </thead>
         <tbody>
-            {% if mf_data%} 
+            {% if mf_data%}
             {% for mf_row in mf_results %}
                 <tr>
                     <td>{{  mf_row.id  }}</td>
@@ -202,7 +177,7 @@
                         <a href="{{url_for('deleteMutualFunds', id=mf_row.id)}}">
                             <button type="button">  Delete  </button></a>
                     </td>
-                    <td>  
+                    <td>
                         <a href="{{url_for('currentFundPrice', id=mf_row.id)}}">
                             <button type="button">CFP</button></a>
                     </td>
@@ -216,14 +191,6 @@
 <!-- Current_Fund_Price Table m:m [Mutual_Funds : Stocks]  -->
 
 <div class="container">
-    <div class="container">
-        <h4>Search Current Fund Price</h4>
-              <div class="row">    
-                    <div class="col-md-4">
-                        {{ wtf.quick_form(cfp_search_form) }}
-                    </div>
-                </div>
-    </div>
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -237,7 +204,7 @@
                 <th>  Edit/Delete  </th>
             </tr>
         </thead>
-        <tbody> 
+        <tbody>
             {% if cfp_data%}
             {% for cfp_row in cfp_results %}
                 <tr>
@@ -246,7 +213,7 @@
                     <td>{{  cfp_row.stocks_id  }}</td>
                     <td>{{  cfp_row.total_shares  }}</td>
                     <td>${{  cfp_row.price_per_share  }}</td>
-                    <td> 
+                    <td>
                         <a href="{{url_for('editCFP', id=cfp_row.id)}}">
                             <button type="button">  Edit  </button></a>
                         <a href="{{url_for('deleteCFP', id=cfp_row.id)}}">
@@ -262,14 +229,6 @@
 
 <!-- Stocks Table, 1:m [Stocks:Sectors]; m:m [Mutual_Funds : Stocks ]  -->
 <div class="container">
-    <div class="container">
-        <h4>Search Stocks</h4>
-              <div class="row">    
-                    <div class="col-md-4">
-                        {{ wtf.quick_form(stock_search_form) }}
-                    </div>
-                </div>
-        </div>
     <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -286,7 +245,7 @@
                 <th>  Edit/Delete  </th>
             </tr>
         </thead>
-        <tbody> 
+        <tbody>
             {% if stonk_data%}
             {% for s_row in stonk_results %}
                 <tr>
@@ -298,14 +257,14 @@
                     <td>{{  s_row.shares_avail  }}</td>
                     <td>${{ s_row.initial_offering_price  }}</td>
                     <td>{{  s_row.sector_id  }}</td>
-                    <td> 
+                    <td>
                         <a href="{{url_for('editStocks', id=s_row.id)}}">
                             <button type="button">  Edit  </button></a>
                         <a href="{{url_for('deleteStocks', id=s_row.id)}}">
                             <button type="button">  Delete  </button></a>
                     </td>
-                    
-    
+
+
                 </tr>
             {% endfor %}
             {% endif %}
@@ -316,14 +275,6 @@
 
 <!-- Sectors table -->
 <div class="container">
-    <div class="container">
-        <h4>Search Sectors</h4>
-              <div class="row">    
-                    <div class="col-md-4">
-                        {{ wtf.quick_form(sector_search_form) }}
-                    </div>
-                </div>
-        </div>
 <div class="table-responsive" >
     <table class="table">
         <thead>
@@ -334,19 +285,19 @@
                 <th>  Edit/Delete  </th>
             </tr>
         </thead>
-        <tbody> 
+        <tbody>
             {% if sector_data%}
             {% for sect_row in sector_results %}
                 <tr>
                     <td>{{  sect_row.id  }}</td>
                     <td>{{  sect_row.name  }}</td>
-                    <td> 
+                    <td>
                         <a href="{{url_for('editStocks', id=sect_row.id)}}">
                             <button type="button">  Edit  </button></a>
                         <a href="{{url_for('deleteStocks', id=sect_row.id)}}">
                             <button type="button">  Delete  </button></a>
                     </td>
-                    
+
                 </tr>
             {% endfor %}
             {% endif %}
